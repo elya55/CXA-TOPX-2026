@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上汽大众 CEA 互联功能竞品调研报告</title>
+<style>
+:root {
+  --lime: #007AFF; --lime-light: #EDF4FC; --lime-mid: #CADAF0;
+  --deep-green: #001E50; --mid-green: #3C587B;
+  --near-black: #181818; --warm-beige: #FCEDE0; --white: #FFFFFF;
+  --orange: #F59E0B; --orange-light: #FEF3C7;
+  --red: #EF4444; --red-light: #FEE2E2;
+  --blue: #3B82F6; --blue-light: #DBEAFE;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  background: #F4F7FB; color: var(--near-black); font-size: 15px; line-height: 1.75;
+}
+p { margin: 10px 0; }
+
+/* Cover */
+.cover { background: var(--deep-green); padding: 80px 40px 60px; position: relative; overflow: hidden; }
+.cover::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--lime); }
+.cover-watermark {
+  position: absolute; right: -20px; top: 40px; font-size: 160px; font-weight: 900;
+  color: rgba(0,122,255,0.05); line-height: 1; pointer-events: none; user-select: none;
+}
+.cover-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: end; }
+.cover-tag {
+  display: inline-block; background: rgba(0,122,255,0.15); border: 1px solid rgba(0,122,255,0.3);
+  color: var(--lime); font-size: 12px; letter-spacing: 2px; padding: 4px 14px; border-radius: 20px; margin-bottom: 20px;
+}
+.cover h1 { color: var(--lime); font-size: clamp(28px,4vw,48px); font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+.cover-sub { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 32px; }
+.cover-kpis { display: flex; gap: 32px; flex-wrap: wrap; }
+.kpi { text-align: center; }
+.kpi-val { color: var(--lime); font-size: 36px; font-weight: 800; line-height: 1; display: block; }
+.kpi-val em { font-size: 16px; font-weight: 400; font-style: normal; }
+.kpi-lbl { color: rgba(255,255,255,0.45); font-size: 12px; margin-top: 4px; }
+.cover-right { text-align: right; }
+.issue-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px; padding: 6px 14px; color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 8px;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.cover-footer {
+  position: absolute; bottom: 28px; right: 40px;
+  color: rgba(255,255,255,0.3); font-size: 12px; letter-spacing: 1px; display: flex; gap: 20px;
+}
+
+/* Nav */
+.nav { position: sticky; top: 0; z-index: 100; background: var(--deep-green); border-bottom: 2px solid var(--lime); }
+.nav-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-logo { color: var(--lime); font-weight: 700; font-size: 13px; padding: 13px 20px 13px 0; border-right: 1px solid rgba(255,255,255,0.12); margin-right: 12px; flex-shrink: 0; white-space: nowrap; }
+.nav-inner a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; padding: 13px 14px; white-space: nowrap; flex-shrink: 0; transition: color 0.2s; }
+.nav-inner a:hover { color: var(--lime); }
+
+/* Layout */
+.page { max-width: 960px; margin: 0 auto; padding: 0 24px 100px; }
+
+/* Section headers */
+.section { margin-top: 64px; }
+.section-h2 { font-size: 24px; font-weight: 700; border-bottom: 3px solid var(--lime); padding-bottom: 10px; margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+.section-h2 .snum { color: var(--lime); font-size: 30px; font-weight: 800; }
+.section-h3 { font-size: 16px; font-weight: 600; color: var(--mid-green); margin: 28px 0 14px; display: flex; align-items: center; gap: 8px; }
+.section-h3::before { content: ''; display: block; width: 4px; height: 16px; background: var(--lime); border-radius: 2px; flex-shrink: 0; }
+.section-h4 { font-size: 14px; font-weight: 600; color: var(--near-black); margin: 18px 0 10px; padding-left: 10px; border-left: 3px solid var(--lime-mid); }
+.divider { height: 1px; background: linear-gradient(to right, var(--lime-mid), transparent); margin: 52px 0; }
+
+/* Callouts */
+.callout { border-radius: 8px; padding: 14px 18px; margin: 14px 0; display: flex; gap: 10px; font-size: 14px; line-height: 1.7; }
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+.callout.insight { background: #EEF5D2; border-left: 4px solid var(--lime); }
+.callout.warning { background: var(--orange-light); border-left: 4px solid var(--orange); }
+.callout.danger  { background: var(--red-light); border-left: 4px solid var(--red); }
+.callout.success { background: #E6F4E8; border-left: 4px solid #22C55E; }
+.callout.info    { background: var(--blue-light); border-left: 4px solid var(--blue); }
+
+/* Stat cards */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; margin: 24px 0; }
+.stat-card { background: var(--white); border-radius: 10px; padding: 20px 16px; border-top: 4px solid var(--lime); box-shadow: 0 1px 4px rgba(0,0,0,0.07); text-align: center; }
+.stat-card .stat-val { font-size: 32px; font-weight: 800; color: var(--deep-green); line-height: 1.1; }
+.stat-card .stat-val em { font-size: 18px; font-weight: 500; font-style: normal; color: var(--mid-green); }
+.stat-card .stat-label { font-size: 13px; color: #666; margin-top: 6px; }
+.stat-card.highlight { background: var(--deep-green); }
+.stat-card.highlight .stat-val { color: var(--lime); }
+.stat-card.highlight .stat-label { color: rgba(255,255,255,0.6); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 16px 0; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead tr { background: var(--deep-green); }
+thead th { color: var(--lime); font-weight: 600; padding: 12px 14px; text-align: left; white-space: nowrap; }
+tbody tr { background: var(--white); }
+tbody tr:nth-child(even) { background: var(--lime-light); }
+tbody td { padding: 11px 14px; border-bottom: 1px solid rgba(0,0,0,0.04); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* Badges */
+.badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; vertical-align: middle; margin-left: 8px; }
+.badge-red    { background: #FEE2E2; color: #DC2626; }
+.badge-yellow { background: #FEF9C3; color: #B45309; }
+.badge-green  { background: #D1FAE5; color: #15803D; }
+.badge-blue   { background: #DBEAFE; color: #1D4ED8; }
+
+/* Bar chart */
+.bar-chart { margin: 20px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.bar-label { width: 130px; font-size: 13px; color: #444; text-align: right; flex-shrink: 0; }
+.bar-track { flex: 1; height: 22px; background: #E8EDE5; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; background: var(--lime); display: flex; align-items: center; padding-left: 8px; }
+.bar-fill.secondary { background: var(--lime-mid); }
+.bar-fill.tertiary  { background: #C5D96B; }
+.bar-val { font-size: 12px; font-weight: 600; color: var(--deep-green); white-space: nowrap; margin-left: 8px; }
+
+/* Quotes */
+.quotes { margin: 12px 0; }
+.quote-item { background: var(--warm-beige); border-radius: 8px; padding: 14px 18px 14px 28px; margin: 8px 0; font-size: 14px; line-height: 1.8; position: relative; border-left: 3px solid #E8C4A0; }
+.quote-item::before { content: 'C'; font-size: 36px; color: #D4A87A; line-height: 1; position: absolute; top: 6px; left: 10px; opacity: 0.4; }
+.quote-source { display: inline-block; margin-top: 6px; font-size: 12px; color: #888; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 10px; }
+
+/* Problem blocks */
+.problem-block { background: var(--white); border-radius: 10px; padding: 20px 24px; margin: 16px 0; border-left: 4px solid var(--lime); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.pb-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.pb-num { background: var(--lime); color: var(--deep-green); font-size: 11px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pb-chain { font-size: 13px; color: #D97706; background: #FFF7ED; padding: 6px 12px; border-radius: 6px; margin: 6px 0 12px; display: inline-block; }
+
+/* Action list */
+.action-list { list-style: none; margin: 12px 0; }
+.action-list li { display: flex; gap: 12px; padding: 12px 16px; background: var(--white); border-radius: 8px; margin-bottom: 8px; align-items: flex-start; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.checkbox { width: 18px; height: 18px; border: 2px solid var(--lime); border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+.action-text { font-size: 14px; line-height: 1.6; }
+.action-text strong { color: var(--deep-green); }
+
+/* Phase blocks */
+.phase-block { background: var(--white); border-radius: 10px; padding: 20px 24px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--lime-light); }
+.phase-tag { background: var(--lime); color: var(--deep-green); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+.phase-tag.mid  { background: var(--lime-mid); }
+.phase-tag.long { background: var(--lime-light); }
+.phase-title { font-size: 16px; font-weight: 600; }
+
+/* Keyword tags */
+.keyword-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.kw-tag { display: flex; align-items: center; gap: 6px; background: var(--white); border: 1px solid var(--lime-mid); border-radius: 20px; padding: 4px 12px; font-size: 13px; }
+.kw-tag .kw-word { font-weight: 600; color: var(--deep-green); }
+.kw-tag .kw-count { color: var(--mid-green); font-size: 12px; }
+.kw-tag.top-1 { background: var(--deep-green); border-color: var(--deep-green); }
+.kw-tag.top-1 .kw-word { color: var(--lime); }
+.kw-tag.top-1 .kw-count { color: rgba(255,255,255,0.7); }
+.kw-tag.top-2 { background: var(--lime); border-color: var(--lime); }
+.kw-tag.top-2 .kw-word, .kw-tag.top-2 .kw-count { color: var(--deep-green); }
+
+/* Grid helpers */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+
+/* Code */
+code { background: var(--lime-light); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; color: var(--deep-green); }
+pre { background: var(--lime-light); padding: 16px 20px; border-radius: 8px; font-family: monospace; font-size: 13px; color: var(--deep-green); overflow-x: auto; line-height: 1.8; margin: 12px 0; }
+
+/* Footer */
+footer { background: var(--deep-green); color: rgba(255,255,255,0.4); text-align: center; padding: 24px; font-size: 12px; margin-top: 80px; border-top: 3px solid var(--lime); }
+footer span { color: var(--lime); }
+
+/* Appendix */
+.appendix-table td:first-child { color: var(--mid-green); font-weight: 500; width: 160px; }
+
+@media print { .nav { display: none; } .cover { page-break-after: always; } }
+@media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } .cover-inner { grid-template-columns: 1fr; } }
+
+html{scroll-behavior:smooth;scroll-padding-top:90px}.cover h1{color:white;max-width:850px;line-height:1.3}.cover-sub,.kpi-lbl{color:#bacbe2}.cover-inner{max-width:1280px}.cover-watermark{font-size:100px;top:48px;opacity:.65}.nav-inner{max-width:1340px}.page{max-width:1340px;padding:0 40px 100px}.section{scroll-margin-top:90px}a{color:#0056bd;text-underline-offset:3px;overflow-wrap:anywhere}a:hover{color:#007aff}.table-wrap{border:1px solid #dbe5f0;box-shadow:none}table{table-layout:fixed;min-width:850px}th,td{vertical-align:top;overflow-wrap:anywhere}thead th{color:white;white-space:normal}td:first-child{font-weight:600}table:has(th:nth-child(4)) th:nth-child(1){width:17%}table:has(th:nth-child(4)) th:nth-child(2){width:23%}table:has(th:nth-child(4)) th:nth-child(3){width:30%}table:has(th:nth-child(4)) th:nth-child(4){width:30%}.section-h2{color:#001e50}.section-h3{color:#0056bd}.nav-inner a{color:#d3e1f7}.nav-logo{color:white}.toc-list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 24px;margin:20px 0 0;padding:0}.toc-list li{padding:8px 0;border-bottom:1px solid #dbe5f0}.jump-index{background:white;border:1px solid #dbe5f0;border-radius:12px;padding:24px;margin-top:40px}.jump-index h2{font-size:20px;color:#001e50}.backtop{position:fixed;bottom:24px;right:24px;background:#001e50;color:white!important;padding:9px 16px;border-radius:24px;text-decoration:none;box-shadow:0 4px 20px #001e5022}.reading-mark{position:fixed;right:18px;top:52%;writing-mode:vertical-rl;letter-spacing:5px;font-size:12px;color:#001e5025;pointer-events:none}.nav-inner a.active{background:#ffffff18;color:white}.nav-logo{cursor:pointer}.section-h2 .snum{font-size:27px}.cover-kpis{gap:42px}.cover-tag{color:#b7d8ff;border-color:#78b8ff55;background:#007aff22}@media(max-width:800px){.page{padding:0 20px 70px}.toc-list{grid-template-columns:repeat(2,minmax(0,1fr))}.cover{padding:52px 24px 80px}.cover-inner{grid-template-columns:1fr}.reading-mark{display:none}.nav-logo{padding-left:16px}.section-h2{font-size:22px}}@media print{.nav,.backtop,.reading-mark{display:none}.table-wrap{overflow:visible}table{min-width:0}.section{break-before:page}.cover{print-color-adjust:exact}.toc-list{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body id="top">
+
+
+<div class="cover">
+  <div class='cover-watermark'>CEA竞品调研</div>
+  <div class="cover-inner">
+    <div>
+      <div class="cover-tag">topx.design · 2026</div>
+      <h1>上汽大众 CEA 互联功能竞品调研报告</h1>
+      <div class='cover-sub'>小红书渠道 · 16 个功能专题｜资料调研：2026.10.21–27 · 汇编：2026.10.29</div>
+      
+    </div>
+    
+  </div>
+  <div class="cover-footer">
+    <span>topx.design</span>
+    <span>2026-10-29</span>
+  </div>
+</div>
+
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">CEA 竞品调研</div>
+    <a href="#s1">调研总览</a><a href="#s2">1 全车远程升级 FOTA</a><a href="#s3">2 远程玻璃加热</a><a href="#s4">3 数字钥匙</a><a href="#s5">4 遥控泊车</a><a href="#s6">5 远程召唤</a><a href="#s7">6 远程空气净化</a><a href="#s8">7 远程冰箱</a><a href="#s9">8 智能设备（含车载香薰）</a><a href="#s10">9 停车拍照</a><a href="#s11">10 维修模式</a><a href="#s12">11 行程统计</a><a href="#s13">12 智驾报告</a><a href="#s14">13 远程车辆状态报告（含提醒）</a><a href="#s15">14 AI萌宠</a><a href="#s16">15 OneHit</a><a href="#s17">16 SOTA订阅</a><a href="#s18">附录 待补证清单</a>
+  </div>
+</nav>
+
+
+<div class="page"><aside class="jump-index" id="index"><h2>目录</h2><ul class="toc-list"><li><a href="#s1">调研总览</a></li><li><a href="#s2">1 全车远程升级 FOTA</a></li><li><a href="#s3">2 远程玻璃加热</a></li><li><a href="#s4">3 数字钥匙</a></li><li><a href="#s5">4 遥控泊车</a></li><li><a href="#s6">5 远程召唤</a></li><li><a href="#s7">6 远程空气净化</a></li><li><a href="#s8">7 远程冰箱</a></li><li><a href="#s9">8 智能设备（含车载香薰）</a></li><li><a href="#s10">9 停车拍照</a></li><li><a href="#s11">10 维修模式</a></li><li><a href="#s12">11 行程统计</a></li><li><a href="#s13">12 智驾报告</a></li><li><a href="#s14">13 远程车辆状态报告（含提醒）</a></li><li><a href="#s15">14 AI萌宠</a></li><li><a href="#s16">15 OneHit</a></li><li><a href="#s17">16 SOTA订阅</a></li><li><a href="#s18">附录 待补证清单</a></li></ul></aside>
+<section class="section" id="s1"><div class="section-h2">调研总览</div>
+<p>本报告汇总上汽大众 CEA2.X 移动互联功能项目的16个竞品研究专题，保留各品牌原文、手机界面观察、功能子项、设计建议与待补证内容；智能设备另含车载香薰扩展。</p>
+<p>整理日期：2026年10月29日。原始调研及补查：2026年10月21—27日。本次为既有资料汇编，没有重新验证各平台的当前可用性。</p>
+<div class="section-h3" id="s1-1">阅读说明</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>研究重点为手机App流程；车机、系统钱包、设备厂商App、官方手册和仅有正文的资料分别注明，不相互替代。</li><li>五星表示本项目的参考相关性，不表示品牌排名、功能支持率或实测表现。小鹏FOTA、小米YU7萌宠保留重点标记。</li><li>“已核验”指原记录中已查看的配图、视频片段或文字，不表示完成实车或App操作测试；未找到证据不等于品牌不支持。</li><li>2026年10月27日已恢复小红书访问并补充5个专题。专题中的旧版超时记录仅作历史过程资料，以各专题开头最新结果及末尾待补证清单为准。</li><li>原文链接在品牌表内可点击，目录可跳转。小红书仍可能要求登录或因签名令牌失效而打不开；可按所列标题、作者重新检索。本报告不保证第三方链接长期可用。</li></ul>
+<div class="section-h3" id="s1-2">跨专题设计判断</div>
+<ol style="margin:8px 0 8px 20px;font-size:14px;"><li>状态与反馈是共同主线：入口、条件、请求中、车辆执行中、成功、失败与恢复需要分别表达。</li><li>手机、车机、系统钱包与设备App之间的交接需交代下一步及完成结果，不能用车机结果图替代手机操作流程。</li><li>数字钥匙优先比较开通、共享与撤销；泊车与召唤优先比较控制条件、路径、持续操作和中断反馈。</li><li>数据报告需明确周期、统计口径与下钻；订阅需将购买权益、激活与软件安装分开。</li><li>AI萌宠的采购范围是照片生成静态/动态壁纸；语音助手与角色换装属于扩展。OneHit关注场景配置及分享；SOTA关注智驾权益订阅，均不与FOTA混用。</li></ol>
+<p>以上为基于现有素材的设计归纳，不是竞品实测或新增采购要求。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s2"><div class="section-h2"><span class="snum">1</span> 全车远程升级 FOTA</div>
+<p>调研日期：2026年10月21日。用途：TOPX 上汽大众 CEA2.X 项目竞品研究方法试跑。</p>
+<div class="section-h3" id="s2-1">1.1 范围与结论</div>
+<p>已在小红书网页端对上汽大众、特斯拉、理想、蔚来、小鹏、小米汽车、问界、极氪、比亚迪、宝马共10个品牌进行首轮检索。原记录打开并检查了其中6个品牌的原始笔记。本次按用户反馈替换极氪、小米汽车、蔚来素材，新增逐图核验的手机App页面；小鹏按用户审核结论列为最高优先级。未完成10家App实机测试，不据此制作功能支持率或品牌排名。</p>
+<p>手机端车辆软件更新是本次研究对象。检索中使用OTA、整车软件更新、远程软件升级等同义词，但不把所有OTA宣传自动认定为覆盖全车控制器的FOTA。排除手机App自身更新、付费功能开通和纯新功能宣传。</p>
+<div class="section-h3" id="s2-2">1.2 本次修订 手机App OTA直接对标</div>
+<p>筛选标准：必须看得到手机App内对车辆OTA的入口、操作或状态页面。车机演示、升级后功能介绍、客服聊天和单纯更新说明宣传均不能单独充当手机App操作对标。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机App画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>⭐⭐⭐⭐⭐ <strong>小鹏 重点参考 第一优先级</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a28146c000000001603d955?xsec_token=ABCpJsfmeFyJe8rbIaGlSgwOIK956EAC_WMuZcLLYxPbc=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏OTA6.2手机实录，看看更新了哪些</a></td><td>用户复核确认该条最有参考价值；从原“待核验候选”提升为用户确认的重点参考。</td><td>后续流程拆解优先以此为样本；此处优先级来自用户审核，不虚构新的逐帧观察。</td></tr><tr><td>极氪</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68adab89000000001b01f3ba?xsec_token=ABjHja-fdMf83Uew61h8KIgC6EelPA9XLCx-3fX09Pr8I=&amp;xsec_source=pc_search&amp;source=web_explore_feed">好消息 推送了，坏消息 卡死了</a>；暗似泥蝶；2025-08-26</td><td>第1张拼图为极氪7X手机App：爱车页下载状态卡、OTA升级页；夜间自动升级开关，说明为凌晨2:00—5:00；当前ZEEKR OS 6.3.3e、目标6.5；底部“正在下载69%”，并有网络导致进度不更新的说明。</td><td>直接参考入口、后台下载、夜间自动升级及进度解释。作者正文称卡在88%，与截图69%并非同一时刻，不合并为同一状态。App版本未明确。</td></tr><tr><td>小米汽车</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/688cb7130000000025023f7b?xsec_token=ABaB6jhS9tqgo39_LvyJuTz6XlaMmOacJ9cjX9XeG72sk=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小米su7升级啦！</a>；用户指定参考</td><td>已按用户要求替换原笔记链接；新笔记内容待重新核验。</td><td>不沿用上一条笔记的版本、预计耗时及按钮观察；后续以本条原笔记画面为准。</td></tr><tr><td>蔚来</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a644181000000000402bc33?xsec_token=ABv8-YiFsrHpyPYs-06FtLtYnOLjoYGoJ0C_k-PItDqv4=&amp;xsec_source=pc_search&amp;source=web_explore_feed">蔚来系统更新不能暂停</a>；Wagi；页面显示07-25</td><td>第2张明确为手机App爱车页：“车辆软件升级·升级中62%”“升级过程中请勿操控车辆”和“版本说明”；页面同时展示门锁、车窗、尾门、空调等车控入口。第1张为客服聊天，不作操作页证据。</td><td>直接参考爱车页升级状态卡、进度及用车限制提醒。作者临时接站时发现无法暂停，提示应研究升级前的用车影响确认；不据可见按钮推断其在升级中均可操作。具体车型/系统版本未明确。</td></tr></tbody></table></div>
+<p>极氪、蔚来替代素材已打开原笔记并检查对应配图。小米后续按用户指定再次更换链接，新笔记待重新核验。</p>
+<div class="section-h3" id="s2-3">1.3 其他已检查的原始证据</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>笔记与作者</th><th>本轮观察</th><th>证据局限</th></tr></thead><tbody><tr><td>特斯拉</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68ab408c000000001d009fd6?xsec_token=ABfNEp9lvymtpYHuQGgs-4tkHVJNqMeGKgyKYEMpBNzUc=&amp;xsec_source=pc_search&amp;source=web_explore_feed">Tesla软件更新</a>；momo；2025-08-25</td><td>第2张为手机截图：系统通知提示软件更新即将开始，可通过Tesla应用程序取消更新；App有“正在准备更新”和“发行说明”。作者询问能否只在手机端操作。</td><td>车型、App版本未明确。可取消提示仅能证明该通知对应的开始前阶段，不能外推至安装中。评论解释不能视为官方操作要求。</td></tr><tr><td>理想</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a54a46b0000000011014d94?xsec_token=ABgXZal1YQljeOIOhzTxb0c__pv35K6UBfY_hUW4WeiZY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">别上车硬更！理想i6升级最佳方式在手机端</a>；YWF＆；页面显示07-13</td><td>第1张为“整车软件更新”：OTA V8.5.1、更新中4%、预计剩余17分钟、“查看更新说明”。第2张更新说明按辅助驾驶/智能座舱组织。正文介绍手机远程预约及夜间空闲时段更新。</td><td>本轮未查看全部6张；预约控件、取消/改约、失败状态尚未视觉核验。</td></tr><tr><td>宝马</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/692beed1000000001f00509a?xsec_token=ABMFhfGj_gaCr1Q4j24C4yfdV7eNVcgQfVoge_GlY1C0Q=&amp;xsec_source=pc_search&amp;source=web_explore_feed">远程软件升级还不会操作？看过来！</a>；承德美宝行宝马4S店；2025-11-30</td><td>查看前2张共9张图。教程展示My BMW车辆通知、“有可用的升级”、版本说明与下载步骤；文字说明手机可下载更新数据。</td><td>经销商教程，含示例车辆与历史版本，不能代表全系当前链路；传输、安装阶段尚未逐图核验。</td></tr><tr><td>比亚迪</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6871d4360000000010024aa6?xsec_token=ABATYQx-XlvBVv3S0hs-dvshC-JH9CIueMMP7UgekHNu0=&amp;xsec_source=pc_search&amp;source=web_explore_feed">比亚迪系统远程升级教程</a>；小红薯5DC74C00；2025-07-12</td><td>正文说明：锁车后打开App→更多功能→OTA升级→有更新时选择升级；评论出现未收到推送的疑问。</td><td>本轮图片未加载，只有正文证据；车型未明确，不能认定适用于全系。</td></tr><tr><td>上汽大众</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a3ce2b30000000007026108?xsec_token=ABtFlEOwroE_K9BZyQ-5GBgigpxhNWaJfGkjRnJd90jSo=&amp;xsec_source=pc_search&amp;source=web_explore_feed">ID.ERA 9X首次OTA升级保姆指南</a>；ID.ERA宿迁上众腾鑫；页面显示06-25</td><td>正文提及车机立即/预约/夜间升级，以及App超级爱车页面管理升级进度、后台下载等。</td><td>疑似经销商账号，身份未独立核验；本轮图片未加载。App具体能力仍需截图或实机核实，且不能外推至老款ID及本项目车型。</td></tr></tbody></table></div>
+<div class="section-h3" id="s2-4">1.4 其余品牌的候选线索 尚未读详情</div>
+<p>下列只证明搜索结果出现相应笔记，不证明功能成立。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>检索词</th><th>候选笔记</th><th>下一步核查</th></tr></thead><tbody><tr><td>问界</td><td>问界 手机 预约升级 OTA</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6ad39a54000000000200e7ac?xsec_token=ABYzsQd1cznU5XplbtUMNdpK80dOiSmgky0-HpHVzkx1Q=&amp;xsec_source=pc_search&amp;source=web_explore_feed">M9还没收到OTA升级通知的可以试试这个方法</a></td><td>核查App入口、分批推送解释；不直接采信催更技巧</td></tr></tbody></table></div>
+<p>链接已更新为带 xsec_token、xsec_source 等参数的小红书完整直达链接，令牌来自本轮实际搜索结果，未自行生成。链接可能因令牌失效或平台登录要求而无法直接打开，届时按标题与作者站内检索。本次修订新增极氪、蔚来的手机App截图证据；小米按用户指定替换链接，内容待复核，并按用户意见标记小鹏为重点参考。</p>
+<div class="section-h3" id="s2-5">1.5 检索策略调整</div>
+<ol style="margin:8px 0 8px 20px;font-size:14px;"><li>第一层：品牌＋OTA升级／整车软件更新／远程软件升级。</li><li>第二层：品牌＋手机／App＋预约升级／升级进度／取消升级／升级失败。</li><li>第三层：车型＋软件版本＋具体操作；用于隔离不同年款、平台和动力类型。</li><li>先读含原始App截图或录屏的车主教程，再补官方或经销商操作说明；版本宣传只作为线索。</li><li>不使用小红书“点点AI”搜索总结作为功能证据。不按点赞量判定真实性，不从搜索命中数量推断功能普及率。</li></ol>
+<p>首轮已发现“App OTA”会混入App自身升级，“手机实录”也可能只是手机拍摄车机。关键词必须与素材内容双重筛选。</p>
+<div class="section-h3" id="s2-6">1.6 正式调研建议记录维度</div>
+<div class="table-wrap"><table><thead><tr><th>阶段</th><th>观察问题</th></tr></thead><tbody><tr><td>发现更新</td><td>主动检查、推送通知、爱车页入口、未轮到推送时如何解释</td></tr><tr><td>理解版本</td><td>当前/目标版本、更新内容、适用车型、App版本依赖、预计耗时</td></tr><tr><td>下载</td><td>下载发生在手机还是车端；网络要求、后台/锁车后下载、断网恢复</td></tr><tr><td>升级前</td><td>电量、驻车、车锁等条件是否可检查；不可用功能和用车影响是否明确</td></tr><tr><td>安排时间</td><td>立即升级、预约、夜间自动升级是否分别存在；预约是否可修改或取消</td></tr><tr><td>进行中</td><td>下载/准备/安装分阶段、百分比、剩余时间、通知、操作限制</td></tr><tr><td>完成与异常</td><td>成功版本、更新说明、失败原因、重试、客服与救援入口</td></tr></tbody></table></div>
+<p>每条记录包含品牌、车型、年款、动力/平台、车辆软件版本、App版本、笔记日期、作者类型、原链接、配图序号、已观察事实、设计判断和待验证项。未知字段保留“未明确”。</p>
+<div class="section-h3" id="s2-7">1.7 对上汽大众方案的初步启发 设计判断</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>区分“尚未推送”“下载中”“待安装”“预约中”“准备中”“安装中”“完成/失败”，让用户知道下一步是否需要自己操作。</li><li>预约时交代预计占车时长及用车限制，并明确允许取消或改约的阶段。预约夜间升级与持续开启的夜间自动升级应分别研究。</li><li>主页面提供状态入口，详情页解释版本、条件和异常；进度与消息通知使用一致的阶段名称。</li><li>更新说明按用户能理解的功能分类，标注车型差异和手机App版本依赖。</li></ul>
+<p>以上是试研假设，尚不足以作为十品牌功能对比结论。下一轮优先拆解五星小鹏样本，补齐各品牌预约控件、前置条件检查、失败反馈，以及问界原始界面。</p>
+<div class="section-h3" id="s2-8">1.8 原素材不再作为手机App直接对标</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>极氪原“OTA 7.2.3升级打卡”、小米原“OTA1.16重点功能介绍和使用教程”、蔚来原“Banyan3.2.0升级攻略”均按用户反馈从直接对标表移除。</li><li>原资料中的背景信息不再支撑手机App操作对比结论，使用本次已核验的新素材。</li><li>本次检索也排除了小米“ota升级流程”的AI问一问总结图，以及客服聊天、单纯车机演示等不符合条件的内容。</li></ul>
+<div class="divider"></div>
+</section>
+<section class="section" id="s3"><div class="section-h2"><span class="snum">2</span> 远程玻璃加热</div>
+<p>调研日期：2026年10月22日。优先手机App操作；表格内保留完整小红书直达链接。</p>
+<div class="section-h3" id="s3-1">2.1 范围与结论</div>
+<p>本轮检索原10个品牌，并扩查沃尔沃。取得Tesla、极氪、理想的手机远程除霜/除雪入口画面，但尚未找到足以确认“独立玻璃电加热远程开关＋执行结果”的完整对标。现有3条适合参考UI与操作入口，不作为硬件方案相同的证明。星级表示素材参考相关性，不是效果或性能排名。</p>
+<p>任务书明确要求“远程启动玻璃加热、执行结果反馈”。本轮不把座舱预热、前挡空调除霜、后窗电加热、后视镜加热自动视作同一功能；具体控制部件、独立开关还是联动模式，需要与业务/技术方确认。</p>
+<div class="section-h3" id="s3-2">2.2 手机App直接参考 已查看操作画面</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机App画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>特斯拉 ⭐⭐⭐⭐ 手机远程除霜入口</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69a390a40000000015032d6f?xsec_token=ABphIVQRGuZALRunHMSqmyurh3tNdre9j2kfKoPd1hIgg=&amp;xsec_source=pc_search&amp;source=web_explore_feed">特斯拉雨天封神！被窝里一键除雾制热</a>；TESLA-特斯拉交付Keria；页面显示03-01</td><td>第1张手机温控页显示车内俯视图、目标温度22.5°、电源，以及独立一行“为车辆除霜”；与露营/爱犬模式同屏。正文介绍打开App→温度→空调及前挡除雾。</td><td>适合参考温控内的功能入口、玻璃与座舱加热的视觉关系。只核验第1张；未见点击后状态或执行结果；不能认定为前挡独立电加热或支持玻璃分区控制。</td></tr><tr><td>极氪001 ⭐⭐⭐⭐ 手机远程除霜控制项</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/63c7c15b000000001c034427?xsec_token=AB5o5sKwaP_nINrGPLf3u95JyeNCFkyOR8DG7pM17v3ng=&amp;xsec_source=pc_search&amp;source=web_explore_feed">极氪001冬季用车远程除霜加热教程</a>；玩转电车潇洒哥；2023-01-18</td><td>视频总长约00:39，约00:13显示手机空调设置画面：恒温座舱、座舱通风和“远程除霜”控制项，车内温度2.8℃。字幕描述可在上车前5—10分钟远程操作。</td><td>适合参考功能分组、座舱状态、开启过程的呈现。截图中远程除霜控件呈环状，不能据此确认成功/正在执行；教程历史较早，未核验现款版本、关闭、时长和具体加热部件。</td></tr><tr><td>理想 ⭐⭐⭐⭐ 手机除雪除冰按钮</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/693fdcea000000001d03b9f7?xsec_token=ABmIUI4zb0PkghIuejH3SmcW3h_BhoHNJ6Z89NURdOTVc=&amp;xsec_source=pc_search&amp;source=web_explore_feed">理想汽车冬季隐藏功能--除雪除冰</a>；小新的100个汽车知识；2025-12-15</td><td>第2张明确为手机温控页，显示座椅图、24.0℃目标温度、空调、极速制冷，以及扇形玻璃图标和“除雪除冰”按钮。正文介绍手机远程开启。</td><td>适合参考综合模式的名称、图标及与常规空调模式的区分。第3—4张未查看，未核验具体联动部件、关闭、倒计时或命令结果；不是独立玻璃电加热证据。</td></tr></tbody></table></div>
+<div class="section-h3" id="s3-3">2.3 已读的文字补充 尚无手机操作画面</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>本轮观察</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>蔚来</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/697b1284000000000e00f46b?xsec_token=ABPa30SKuvHYrR8TPhpXVO2ySu6Q9TyXBlVhx5SpFaTOo=&amp;xsec_source=pc_search&amp;source=web_explore_feed"> 蔚来冬季黑科技｜一键除雪太香了</a>；NIO蔚来-胖虎；页面显示02-01</td><td>正文描述上车前App或车机开启，联动空调、后视镜加热、后窗除雾；本轮只见视频人物/封面，尚未核验App流程。</td><td>可作为综合除雪模式的联动线索，不能据正文确认各车型配置、真实耗时及独立部件开关。</td></tr></tbody></table></div>
+<div class="section-h3" id="s3-4">2.4 其余原竞品 待核验线索</div>
+<p>以下仅为实际搜索结果，尚未阅读详情，不以标题认定支持远程玻璃加热。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>下一步核查</th></tr></thead><tbody><tr><td>小鹏</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69552697000000002103fb51?xsec_token=ABBzWdlxpky3hTcmq5EO7zGTGGIWTKHxCAgb5zL3BHIbM=&amp;xsec_source=pc_search&amp;source=web_explore_feed">怎么快速清除前挡风玻璃积雪</a></td><td>核查是否为App远程入口，还是车机/手动操作。</td></tr><tr><td>小米汽车</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6933fb1a000000001e0368a4?xsec_token=ABqEwNlB_DsR6hzh7OOtGLmJyQh6gH9A-EfaRfmXrafgg=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小米汽车过冬攻略</a></td><td>核查除霜功能和普通预热是否分开；米家自动化不自动算小米汽车App原生流程。</td></tr><tr><td>问界</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6972ed0d000000000a0318f4?xsec_token=ABo7K9eIwyu--C6biCwT3uL_KlhmJCKxLmcZaPsxZynnI=&amp;xsec_source=pc_search&amp;source=web_explore_feed">暖舱除霜 暖冬无忧</a></td><td>核查品牌/车型、手机入口，以及后窗/后视镜是否独立。</td></tr><tr><td>比亚迪</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/697b0a57000000002102b9bc?xsec_token=ABPa30SKuvHYrR8TPhpXVO2-fwsL8ot0NXF8E1g9S8zUM=&amp;xsec_source=pc_search&amp;source=web_explore_feed">比亚迪一键除雪功能！！好用！！</a></td><td>核查是不是App原生功能、联动模式或用户智慧场景。</td></tr><tr><td>宝马</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/696dc2a6000000001a02f43c?xsec_token=ABrK7soppjpfk-0aPFy3KRJl6BOfO3Yvknhm_XNv6xNq8=&amp;xsec_source=pc_search&amp;source=web_explore_feed">宝马冬季暖车功能指南来啦</a></td><td>核查My BMW温控与玻璃除霜是否有明确独立入口，不能以暖车代替。</td></tr><tr><td>上汽大众</td><td>本轮未找到足够相关的原笔记，暂不附无关链接</td><td>“上汽大众 APP 远程 玻璃加热”主要命中钥匙/远控泛内容；需补查车型及玻璃加热具体名称。</td></tr></tbody></table></div>
+<div class="section-h3" id="s3-5">2.5 扩展样本与排除记录</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>核验结论</th></tr></thead><tbody><tr><td>沃尔沃</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69299d40000000001e03b1bb?xsec_token=ABH5oeRChkT5s-66J_JnRupgq2eXywUdpjtdBQcfB18b4=&amp;xsec_source=pc_search&amp;source=web_explore_feed">沃尔沃App更新新功能啦！</a></td><td>已看第1张，确为App车控主页，正文称5.60.0；有若干图标但未明确标注玻璃加热，不能凭图标猜测，暂不列为直接对标。</td></tr></tbody></table></div>
+<div class="section-h3" id="s3-6">2.6 待补的子topic</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>功能入口与命名：玻璃加热、除霜、除雾、除雪分别对应什么。</li><li>控制范围：前挡、后窗、后视镜；独立控制或综合联动。</li><li>开启与关闭：确认、提交中、车端执行中、成功/失败反馈。</li><li>持续时间：倒计时、自动停止、续时、是否允许预约。</li><li>前置条件与异常：车辆状态、低电、网络、配置不支持及重试。</li></ul>
+<p>当前只有入口画面较明确，未取得足够的执行结果、失败恢复、倒计时和自动关闭证据。不能将“命令已发送”写成“玻璃已除霜”。</p>
+<div class="section-h3" id="s3-7">2.7 对本项目的初步启发</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>在温控页提供易识别的玻璃部件入口，同时用文字说明控制范围，避免仅靠前/后挡图标区分。</li><li>如果实际是综合模式，应说明会同时开启哪些设备；如为独立电加热，明确标注部件与开启状态。</li><li>命令提交和车端执行分开反馈，补充更新时间、自动停止时间及关闭入口。以上为设计建议，不代表已确认采购范围。</li></ul>
+<div class="section-h3" id="s3-8">2.8 检索口径</div>
+<p>原10品牌中，Tesla出现在综合检索结果，其余按品牌检索；另外扩查沃尔沃。全部判断来自可见原笔记正文、截图或视频片段；未进行车辆/App实机测试，未采用小红书AI总结为功能事实。原帖中的效果和耗时描述不作性能保证。</p>
+<p>检索词：汽车 APP 远程 玻璃加热 除霜；理想 APP 远程 后窗 除霜；小鹏 APP 远程 除霜 玻璃；蔚来 APP 玻璃 加热 除霜；极氪 APP 远程 玻璃加热 除霜；小米汽车 APP 远程 除霜；问界 APP 远程 除霜 后视镜；比亚迪 APP 远程 玻璃 除霜；上汽大众 APP 远程 玻璃加热；宝马 APP 远程 除霜 玻璃；沃尔沃 APP 挡风玻璃 加热。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s4"><div class="section-h2"><span class="snum">3</span> 数字钥匙</div>
+<p>调研日期：2026年10月22日。以手机App实际流程为主，系统钱包单独注明。按FOTA格式整理：品牌、原笔记链接、已核验内容、参考重点与局限位于同一行。</p>
+<div class="section-h3" id="s4-1">3.1 优先参考 已看到手机操作画面</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机流程或内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>理想 ⭐⭐⭐⭐⭐ 手机蓝牙钥匙与家庭共享</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/65d6f8b4000000000b020381?xsec_token=ABWg4RwJuCY_ehCGVfW7t0o8EXwfPRG_PJQPk9gGwqCPk=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：理想汽车共享钥匙指南</a></td><td>车控→手机钥匙→家人共享→邀请成员。第3张是手机钥匙入口；第4张显示“未连接”、感应区设置、使用帮助和停用手机钥匙；第5张显示家庭成员列表、“移除”和“邀请成员”。</td><td>对应子topic：手机钥匙入口、连接状态、感应区设置、家庭共享、邀请成员、移除成员、停用钥匙。 已看第1—5张，共11张；感应区内页、受邀人接收步骤和移除生效时间待补。2024-02-22历史教程，不能外推现款全系。</td></tr><tr><td>上汽大众 ⭐⭐⭐⭐⭐ 临时与长期钥匙分享</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69621a1b0000000021028ed9?xsec_token=AB6GyTxYJ-_6Vssm6nD5Pd8NbqKARxU2pz9lhKCkc6u78=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：上汽大众蓝牙钥匙分享路径，便捷随行</a></td><td>爱车→数字钥匙→钥匙分享→选择普通/亲情钥匙→设置到期时间。第1张为帕萨特爱车页入口；第2张有“权限不足/去开启”、亲情钥匙、钥匙分享；第3张有普通钥匙“单次分享”、亲情钥匙“永久使用”和日期/小时选择器。</td><td>对应子topic：数字钥匙入口、权限不足提示、普通/亲情钥匙、分享有效期、好友留言。 已看第1—3张，共4张；领取、撤销待补。是否原厂/后装、是否付费及车型适配待核，不能据此认定支持UWB。</td></tr><tr><td>比亚迪 ⭐⭐⭐⭐⭐ NFC与UWB开通配对</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/684e998400000000120049fa?xsec_token=AB5FG6ZcNoZ3p48r19tIj0phA9WT0g73bP4Qsg5c8tp0M=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：一招教会你使用和操作UWB数字钥匙，</a></td><td>开通条件提示→“NFC&amp;UWB数字钥匙”页→添加→连接配对等待。视频约00:06提示手机在车内、开启蓝牙和定位；约00:17展示添加按钮；约00:36展示“正在添加钥匙”。总长约02:47。</td><td>对应子topic：开通前置条件、NFC/UWB添加入口、连接与配对、添加进度。 经销商教程演示，未实机测试；车型/手机适配、分享及撤销待补。</td></tr><tr><td>宝马 ⭐⭐⭐⭐ 系统钱包分享</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68b3b60d000000001c005702?xsec_token=AB4m5TGJxsjkoVx-dleIjXRmuLTSJznRFlOQtn3k_xYI0=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：宝马的数字钥匙，如何分享给家人</a></td><td>手机进入系统钱包后进行分享；视频约00:26显示接收人和允许解锁、锁定、启动、驾驶车辆的权限说明。总长约01:11。</td><td>对应子topic：车企App与系统钱包衔接、钥匙分享、接收人、授权范围、接收异常。 不是全部发生在My BMW内。发送与接收全链路尚未逐段核验；评论中的跨品牌手机兼容和链接问题仅作问题线索。</td></tr></tbody></table></div>
+<div class="section-h3" id="s4-2">3.2 补充参考 已读原文 但手机流程证据不足</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机流程或内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>蔚来｜iPhone数字钥匙开通</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6982ce34000000001a0206b2?xsec_token=AB_HZYP7UAKtzpfqERnnWwJLBML5BIBeEoxblpyvQXV8Y=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：蔚来iphone数字钥匙如何设置？</a></td><td>原帖第2张文字路径为：蔚来App→爱车→设置→钥匙→获取新钥匙/添加→iPhone数字钥匙→获取。</td><td>对应子topic：App添加入口、前置条件、Apple钱包衔接。 已看第1—2张，共4张，为文字教程，没有App实际截图；原帖手机系统设置细节未独立核验。</td></tr><tr><td>极氪｜钥匙创建失败</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68c12fef000000001b021f18?xsec_token=AB6pTL9Y44oskhqeIrqAsqmH0As8K6VCVaOTZAOV3jFXE=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：不罚站的极氪钥匙3.0，创建老失败怎么办？</a></td><td>已读“不罚站的极氪钥匙3.0，创建老失败怎么办？”正文与评论，有反复创建失败、系统版本和车端状态讨论。</td><td>对应子topic：创建失败、车型/系统适配、异常恢复。 本轮未取得可辨认操作画面；根因及解决方法未验证。</td></tr><tr><td>小米汽车｜NFC开通与使用</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6677eb51000000001d01819b?xsec_token=ABtN9Yg2oY2Q7peFfcZvMmKtwIL3y4LkFviAr-I_Dv70M=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：小米SU7如何使用手机NFC钥匙？</a></td><td>原正文介绍开通NFC后，手机背面靠近车辆B柱感应区。</td><td>对应子topic：NFC钥匙开通、感应区说明、手机兼容性。 已打开原文，视频未取得可辨认流程画面；不据此认定UWB、iPhone或全部手机支持。</td></tr></tbody></table></div>
+<div class="section-h3" id="s4-3">3.3 待核验候选 仅找到搜索结果</div>
+<p>以下仅找到搜索结果，未打开详情。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>待核查内容</th></tr></thead><tbody><tr><td>小鹏</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6741bc180000000007030951?xsec_token=AB-M0OG_4DTX8zrFLmjGKJA3yij92qnYe6BXOC6tSCm98=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：如何为亲友轻松授权车辆使用权限</a></td><td>亲友授权、蓝牙钥匙接收侧。</td></tr><tr><td>问界</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/678a4394000000001d012f6d?xsec_token=ABCLKzqTqJcKzjxMEvkWpSjCl13AacFSlMjUDd5PRG5kk=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：问界车辆用华为手机申请数字车钥匙方法教程</a></td><td>华为手机申请钥匙、鸿蒙智行App与华为钱包衔接。</td></tr><tr><td>特斯拉</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68a066a9000000001d023032?xsec_token=ABO-9X21Znx_CbCMtbp9jEmlTLeS7FFp9a6-VVY1zOalY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">直接打开原笔记：特斯拉手机钥匙如何分享给别人？保姆级教程</a></td><td>驾驶员邀请与本机手机钥匙配对是否分别进行。</td></tr></tbody></table></div>
+<div class="section-h3" id="s4-4">3.4 尚未覆盖清楚的子topic</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li><strong>完整接收流程</strong>：理想、宝马、大众目前主要看到发送侧，需补受邀人领取、激活和成功确认。</li><li><strong>撤销实际生效</strong>：理想已有停用/移除入口，但离线时是否生效、时延及通知均未验证。</li><li><strong>设备与环境变化</strong>：换手机、手机遗失、无网、低电及手表钥匙，当前素材不足。</li></ul>
+<div class="section-h3" id="s4-5">3.5 本轮整理结论</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>开通与配对优先看 <strong>比亚迪</strong>。</li><li>蓝牙连接状态与家庭成员管理优先看 <strong>理想</strong>。</li><li>临时/长期分享与到期设置优先看 <strong>上汽大众</strong>。</li><li>系统钱包分享优先看 <strong>宝马</strong>。</li></ul>
+<p>本轮为小红书素材研究，未进行车辆或App实机测试。BLE、NFC、UWB分别记录；普通远程解锁不自动算数字钥匙，不能由“无感解锁”推断UWB。星级仅表示本项目参考相关性。全部原笔记链接保留完整令牌，平台仍可能要求登录或因令牌失效无法打开。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s5"><div class="section-h2"><span class="snum">4</span> 遥控泊车</div>
+<p>调研日期：2026年10月23日。本轮为小红书公开素材研究，核验手机 App 的可见画面与笔记正文，未操作实车。历史素材仅用于交互参考，不代表当前版本、全系车型或所有手机均支持。表中明确区分画面观察与作者描述；未观察到不等于产品没有。原文链接保留实际检索获得的令牌，可能需要登录或因令牌失效而重新站内搜索。</p>
+<div class="section-h3" id="s5-1">4.1 任务书范围</div>
+<p>依据设计任务书 2.1.1 功能性需求（项目任务书，2.1.1节；本报告已摘录相关备注）的功能备注：</p>
+<div class="callout info"><span class="callout-icon">ℹ️</span><div>实现查看车位扫描过程、遥控泊入，遥控泊出，车辆位姿调整，功能设置，功能显示，重要文言信息显示，规划路径显示，自车状态显示，周边环境显示，目标车位显示等功能</div></div>
+<p>本次重点是手机端如何承接泊车任务、展示状态并让用户控制车辆。车机选位与手机接管应分别记录，不能将车机上的扫描选位直接算作手机端能力。</p>
+<div class="section-h3" id="s5-2">4.2 手机 App 画面直接参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机 App 画面/流程</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>蔚来</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68ca88b00000000011017f72?xsec_token=ABnDEgxweKklsNvwKMMqaZ25s_TGJAtSVHFBO3dHdKRQA=&amp;xsec_source=pc_search&amp;source=web_explore_feed">蔚来手机遥控泊车功能，详细教程奉上</a>；威来来；2025-09-17</td><td>视频约00:23：手机“遥控泊入”页，自车俯视模型、D挡、前行距离0.3m，底部“暂停”操作。</td><td>参考车辆状态、运动信息和暂停入口。此次核验的是执行中画面；扫描、选位、泊出及设置未完整核验。评论关于蓝牙和保持前台的说法只作体验线索。</td></tr><tr><td><strong>宝马</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6868f5fe0000000011001379?xsec_token=ABlGqQW_xEvqU7RO1pD7JijRk1P7ybZYPEjRDf5xER_es=&amp;xsec_source=pc_search&amp;source=web_explore_feed">宝马遇到很窄车位用手机遥控泊车很方便</a>；BM车品精选；2025-07-05</td><td>视频约00:32：手机显示自车俯视示意、侧向彩色距离提示、R挡；下方提供前后方向控制区，字幕演示按住向后驶入。</td><td>参考位姿示意、近障碍提示及持续按压控制的布局。属于狭窄车位挪车演示，不能据此认定具备手机扫描车位或自动选位；车型/选装/手机适配未核实。</td></tr><tr><td><strong>小米 SU7</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68299c19000000000303cd92?xsec_token=ABM3Ittv1gLL1dXuoDhFm8DQI_Hsxwp8KQ3Bc6iFQnAtQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小米SU7遥控泊车和直线召唤</a>；一只派大星；2025-05-18</td><td>视频可见手持手机的深色车辆控制页、俯视车模和底部蓝色操作区；字幕说明狭窄车位上下车场景。</td><td>参考车外操作场景和深色控制页。画面斜拍，按钮细字及完整步骤无法可靠识别，不作为详细控件规范；同条包含直线召唤，不等于指定地点召唤。</td></tr><tr><td><strong>小鹏</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aa7d7e0000000002601be10?xsec_token=AB1X3-ztyvBv2Ysy8QRtBjg285BiLcX3eSY4ewsAnNqpw=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏车主嘴真紧，不告诉我手机可以遥控泊车</a>；开电车的doni；页面显示09-14</td><td>视频可见小鹏手机 App 爱车页。正文描述“打开 App→遥控泊车→开始泊车→搜索就近车位→泊入”。</td><td>可参考功能入口与用户发现成本：作者提车一年多才发现该功能。搜索车位及自动泊入链路目前是正文证据，尚未逐帧确认全部操作页；不因 FOTA 中小鹏优先，就自动给本功能五星。</td></tr></tbody></table></div>
+<div class="section-h3" id="s5-3">4.3 正文流程补充</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>正文提供的流程</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>乐道（扩展对标）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6778cf0e0000000014026603?xsec_token=ABtqk6LoxMNaEClzz97AeJle9ecgWAanPKXNKys_jdHaU=&amp;xsec_source=pc_search&amp;source=web_explore_feed">借助App在狭窄车位泊车</a>；小红薯67704B40；2025-01-04</td><td>分为“遥控泊入 / 遥控泊出 / 直线挪车”。泊入：车机选目标车位→点击遥控泊入→下车→乐道 App 接管；泊出：App 选择方向→执行；直线挪车：长按方向→松手停车。正文称泊出可再次点击、退出或锁屏紧急停车，需连接蓝牙钥匙。</td><td>对本项目最有用的是三类任务分流、跨端交接、停止触发条件的说明。本轮配图未成功核验，仅作为正文流程参考；账号非已确认官方来源，不将其停止规则直接写成项目技术要求。</td></tr></tbody></table></div>
+<div class="section-h3" id="s5-4">4.4 对任务书的覆盖与设计启示</div>
+<div class="table-wrap"><table><thead><tr><th>任务书子项</th><th>本轮可用参考</th><th>仍需补齐的证据/设计问题</th></tr></thead><tbody><tr><td>车位扫描过程、目标车位</td><td>小鹏正文提及搜索；乐道正文明确车机选位后手机接管</td><td>尚缺清晰手机扫描/多车位选择页；需确认本项目由车机还是手机发起扫描与选位。</td></tr><tr><td>遥控泊入、泊出</td><td>蔚来执行页；乐道正文三类流程</td><td>泊出方向选择页、执行完成页、重新选择目标车位仍需补图。</td></tr><tr><td>车辆位姿调整</td><td>宝马前后方向控制与车模；乐道直线挪车说明</td><td>不能把直线挪车等同全向位姿调整；转向、微调范围及控制方式需项目确认。</td></tr><tr><td>自车状态、重要文言</td><td>蔚来挡位/距离/暂停；宝马方向与近障碍提示</td><td>需明确连接、准备就绪、执行、暂停、恢复、完成、失败各状态的主文案。</td></tr><tr><td>周边环境、规划路径</td><td>宝马车周示意为局部参考；<a href="#s6">远程召唤报告</a>中理想/问界影像可跨功能参考</td><td>本轮泊车素材未核验完整路径页；必须区分示意车模、感知渲染与真实摄像头画面。</td></tr><tr><td>功能设置</td><td>暂无充分画面</td><td>待补默认方向、提示设置或其他实际参数；不凭空增加设置项。</td></tr></tbody></table></div>
+<p>建议方案先梳理“连接检查→任务选择→目标/方向确认→执行监控→暂停/恢复→完成”，再明确车机向手机交接节点。界面应让用户一眼分清“正在执行、已暂停、已完成”；不同方案的长按或点击控制机制必须由车辆控制协议确定。</p>
+<p>本轮用“遥控泊车 APP 教程”“小米 遥控泊车 APP”等站内关键词筛选，打开6条相关原笔记。传统品牌已核验宝马，扩展了乐道；未完成原10个品牌逐一实机或全版本覆盖，不制作支持率排名。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s6"><div class="section-h2"><span class="snum">5</span> 远程召唤</div>
+<p>调研日期：2026年10月23日。本轮为小红书公开素材研究，核验手机 App 的可见画面与笔记正文，未操作实车。历史素材仅用于交互参考，不代表当前版本、全系车型或所有手机均支持。表中明确区分画面观察与作者描述；未观察到不等于产品没有。原文链接保留实际检索获得的令牌，可能需要登录或因令牌失效而重新站内搜索。</p>
+<div class="section-h3" id="s6-1">5.1 任务书范围</div>
+<p>依据设计任务书 2.1.1 功能性需求（项目任务书，2.1.1节；本报告已摘录相关备注），核心要求是车辆从车位前往指定位置，包含位置设定、路径规划及手机端监控与介入。原文为“实现将车辆车位召唤至指定位置，包含位置色号顶、路径规划及手机端监控与介入”；其中“位置色号顶”疑似笔误，本轮按“指定位置/目标点选择”寻找素材，最终含义仍需确认。</p>
+<p>本次直接对标优先选择能看到目标点、地图/路径和执行监控的手机流程。直线前后挪车、普通遥控泊出单独标明，只能覆盖局部交互。</p>
+<div class="section-h3" id="s6-2">5.2 手机 App 直接对标</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机 App 画面/流程</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>⭐⭐⭐⭐⭐ <strong>理想 VLA召唤（历史流程）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68b06927000000001d006dd2?xsec_token=ABPKGF6KLMjz6PyUtrr0QsZlA-DctQQgafotqbGQZs4uY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">教你怎么使用理想VLA召唤</a>；橙子饲养员；2025-08-28</td><td>入口画面将“直线召唤”和“VLA召唤”并列。视频约00:19显示B2停车场地图、车辆位置、接泊点、蓝色规划路线、“即将抵达25米”；下方有车周影像、视角切换/放大图标、“正在前往目标地点”“请注意观察周围环境”和“暂停”按钮。</td><td>本轮最贴合任务书的流程参考：地图位置+路径+影像+状态+介入同屏。正文称先行驶建立记忆，再选择接驳点或车位，完整选点步骤尚未逐帧核验。评论出现后续无法使用的反馈，不能据此断言当前开放或关闭；车型、版本与当前可用性需另行核实。五星仅代表本次设计参考价值。</td></tr><tr><td>⭐⭐⭐⭐⭐ <strong>问界 M8 / 鸿蒙智行 VPD</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68f7b0ba000000000700295e?xsec_token=ABj6n0CgoyytqxARd2uhm7lu4Nh9tXeMpmalKheDRh5mk=&amp;xsec_source=pc_search&amp;source=web_explore_feed">第一次使用VPD远程召唤</a>；山海尔尔；2025-10-22</td><td>视频开头手机车控列表可见泊车代驾；约00:30显示地图目标点“B2层上下车点”、收藏及“去这里”；约00:59进入车周影像与自车俯视页，下方D挡、“正在泊出车位”和“暂停”。</td><td>可直接拆解“地图选点→确认去这里→泊出阶段监控→暂停入口”的组织方式。已看到的是地图选点与泊出中的画面，后续全程路径、终点到达、实际暂停与恢复结果未完整核验。拍摄画面有反光；App/车机版本不明确，不外推整个鸿蒙智行品牌矩阵。</td></tr></tbody></table></div>
+<div class="section-h3" id="s6-3">5.3 功能解释与局部流程补充</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验内容</th><th>如何使用这条参考</th></tr></thead><tbody><tr><td><strong>特斯拉</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a8fe3580000000005029b7b?xsec_token=ABzXW03d27eHKSG0AdqcLTqM74h0s71tclMk31WIYp4UQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">特斯拉召唤功能怎么设置</a>；特斯拉认证顾问湖北黄琳；页面显示08-27</td><td>正文明确区分基础召唤（前后进出车位）与高级智能召唤ASS（到手机GPS位置或所选地点）。本轮视频未核验到清晰操作页。</td><td>适合研究“来找我 / 前往指定地点”的任务命名与概念分层。仅为小红书作者文字说明，不是手机流程已验证证据；不采信评论中的套餐价格、支持范围作结论。</td></tr><tr><td><strong>小米 SU7</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68299c19000000000303cd92?xsec_token=ABM3Ittv1gLL1dXuoDhFm8DQI_Hsxwp8KQ3Bc6iFQnAtQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小米SU7遥控泊车和直线召唤</a>；一只派大星；2025-05-18</td><td>原笔记包含遥控泊车与直线召唤演示；可见手机车辆控制页。</td><td>只作直线挪车/狭窄车位场景的补充；本条没有已核验的地图指定点与绕行规划，不列为完整远程召唤对标。</td></tr><tr><td><strong>乐道（扩展对标）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6778cf0e0000000014026603?xsec_token=ABtqk6LoxMNaEClzz97AeJle9ecgWAanPKXNKys_jdHaU=&amp;xsec_source=pc_search&amp;source=web_explore_feed">借助App在狭窄车位泊车</a>；小红薯67704B40；2025-01-04</td><td>正文区分直线挪车、遥控泊入、遥控泊出；描述泊出选择方向和多种停止方式。</td><td>用于把“方向控制”“泊出”和“到目的地”分开设计；本条不证明具备指定地点召唤，图片未完成核验。</td></tr></tbody></table></div>
+<div class="section-h3" id="s6-4">5.4 按任务书拆解</div>
+<div class="table-wrap"><table><thead><tr><th>任务书子项</th><th>重点参考</th><th>本项目应梳理的交互</th></tr></thead><tbody><tr><td>指定位置</td><td>问界地图上下车点、“去这里”；理想接泊点</td><td>当前楼层、车辆与人的位置、可选点与不可选点、目标点确认。自由点选还是仅预设接驳点，现有素材不能替项目定论。</td></tr><tr><td>路径规划</td><td>理想蓝色路线、目标点与剩余距离</td><td>路线预览、路线变更、无法规划时的解释；不能只显示车辆位置而不让用户知道去哪。</td></tr><tr><td>手机端监控</td><td>理想地图+影像；问界车周影像+阶段状态</td><td>总览与近车环境如何切换、当前阶段、车辆是否仍在移动、信息更新是否及时。</td></tr><tr><td>手机端介入</td><td>两者均有显著“暂停”按钮</td><td>暂停后状态、继续/结束、失联或退出时的实际车辆行为需要协议与实车验证。按钮存在不等于停止效果已测试。</td></tr><tr><td>从车位至终点</td><td>问界“正在泊出车位”；理想“正在前往目标地点”</td><td>建议分别表达准备、泊出、行驶、到达、暂停、失败；本轮尚缺清晰的终点完成页与异常恢复全流程。</td></tr></tbody></table></div>
+<p>建议以理想研究“信息同屏布局”，以问界研究“目的地确认和执行阶段切换”。这两条是互补素材，不做品牌能力优劣排名。任务书中的“远程”也不能直接解释为任意距离或不需要现场观察。</p>
+<div class="section-h3" id="s6-5">5.5 本轮范围与待补项</div>
+<p>站内检索“车辆召唤 APP 指定位置”，打开理想、问界、特斯拉3条原笔记，并关联检查小米与乐道的相邻功能。其他品牌暂无本轮完成核验的指定地点召唤手机流程，不代表不支持。</p>
+<p>后续素材缺口：清晰目标点选择完整过程、路线规划失败、不可用原因、暂停后的恢复、网络/蓝牙断连、到达确认。当前已可用于第一轮UI方案讨论，不作为现售车型能力清单。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s7"><div class="section-h2"><span class="snum">6</span> 远程空气净化</div>
+<p>检索与核验：2026年10月23—25日。本轮通过小红书站内检索、原笔记正文及配图核验，未进行实车测试。只把看清的手机 App 页面列为直接参考；作者描述、车机画面及相邻功能另行标明。历史素材用于设计参考，不代表当前版本或全系车型支持。原文链接保留实际检索令牌，可能需要登录，令牌失效时可按标题站内查找。</p>
+<div class="section-h3" id="s7-1">6.1 任务书范围与结论</div>
+<p>任务书 2.1.1 功能性需求（项目任务书，2.1.1节；本报告已摘录相关备注）的备注为：“远程开启/关闭空气净化、执行结果反馈；”</p>
+<p>重点研究三个子项：远程开启、远程关闭、执行结果反馈。空气质量数值、定时功能可作扩展参考；开窗通风、高温抑菌和车机自动净化不能直接当成同一功能。</p>
+<p>本轮最完整的手机流程来自<strong>沃尔沃S60历史版本</strong>，覆盖入口、运行中、停止和完成反馈。原10家中暂未取得同等完整且清晰的手机净化流程，不能为了品牌齐全把车机页算作App页。</p>
+<div class="section-h3" id="s7-2">6.2 手机 App 直接参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>⭐⭐⭐⭐⭐ <strong>沃尔沃 S60（扩展对标，历史版本）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/632c3acf000000000801b08c?xsec_token=AB1IlhSUKu2SsLhsfDQ2gG7I_UkZ-caaloCpqzOKP0xCc=&amp;xsec_source=pc_search&amp;source=web_explore_feed">【沃尔沃S60】最实用独立功能之一回归！</a>；阿鸭笔记；2022-09-22</td><td>4张配图均已查看。图1：用车首页车模旁叶片图标入口、AQI20。图2：“空气清洁”“剩余4分钟”、底部“停止”。图3：功能说明，区分绿色清净与灰色未知状态。图4：“已清洁15:07”、绿色状态点、底部“启动”。</td><td>直接参考“首页入口→运行倒计时→停止→完成时间→再次启动”的状态表达。五星代表设计素材完整性。作者置顶评论在发布两天后称功能又消失，故必须作为历史交互案例，不能当成当前可用性推荐。未实测启动、停止、失败及中断结果。</td></tr></tbody></table></div>
+<div class="section-h3" id="s7-3">6.3 正文与相邻功能补充</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>沃尔沃 XC70</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/697c6250000000000b008013?xsec_token=ABkjr29P7QO6DCgtOwAvoSNbkQtErYrKwEXQNFf3yNljg=&amp;xsec_source=pc_search&amp;source=web_explore_feed">沃尔沃 XC70 车主狂喜！APP 车控功能全解析</a>；广州标粤4S中心；页面显示01-30</td><td>正文介绍 App 空气净化图标颜色、首页常用功能自定义。已查看封面，尚未逐图核验净化操作页。</td><td>可作为较新版本补图线索；正文关于黄色图标阈值的说法尚未独立验证，不将其作为本项目空气质量标准。</td></tr><tr><td><strong>特斯拉</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69e4d7cc000000001e00e29b?xsec_token=ABfbDhlfqP2z54Mfe2CwCGpg1lQaW2U3lRGxExjLMNLVQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">过敏星人必看！特斯拉HEPA过滤系统太救命了！</a>；橘子大王；页面显示04-19</td><td>正文提到手机 App 远程启动净化；可见配图为车机空调页。</td><td>“生物武器防御模式”可作同义词检索线索。本条没有已核验的手机流程，不列为直接对标；不采信其过滤率、健康效果等宣传数字作为本项目结论。</td></tr><tr><td><strong>小鹏</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6811aeb0000000002301682a?xsec_token=ABXPf8OIMGpw-NW9QdXXBOFI9cDj-rMxbqea8oQ5V7j8k=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏提车新车祛味</a>；alien；2025-04-30</td><td>正文描述手机 App 远程高温抑菌，之后在车旁开门窗通风。视频未核验到清晰手机控件。</td><td>这是高温抑菌/祛味的相邻场景，与普通空气净化应分开命名；不能用该条证明远程净化开关与结果反馈完整。</td></tr><tr><td><strong>蔚来</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69463d68000000001f009320?xsec_token=ABZyvopNS3U6pK2T9TbplIQAL8PI1XWYB4OYzfr3dW07c=&amp;xsec_source=pc_search&amp;source=web_explore_feed">雾霾天解锁蔚来新功能</a>；小吧；2025-12-20</td><td>正文讲述大屏PM2.5数字及点击启动净化。</td><td>仅为车机内空气质量提醒的体验描述，不证明手机远程净化；可参考用户对“数值→操作入口”的发现过程。</td></tr></tbody></table></div>
+<div class="section-h3" id="s7-4">6.4 对任务书的覆盖</div>
+<div class="table-wrap"><table><thead><tr><th>子项</th><th>可参考内容</th><th>待补证据与设计建议</th></tr></thead><tbody><tr><td>远程开启</td><td>沃尔沃图1入口、图4“启动”</td><td>需补点击后请求中、车辆确认开启、开启失败；点击成功不应直接显示车辆已运行。</td></tr><tr><td>远程关闭</td><td>沃尔沃图2“停止”</td><td>按钮可见不等于停止效果已实测；需补停止中、停止成功、失败重试。</td></tr><tr><td>执行结果反馈</td><td>沃尔沃运行倒计时、已清洁时间与状态点</td><td>将“指令已执行”和“空气质量是否达标”分别表达；历史时间要明确，未知数据不能被误读为实时污染值。</td></tr></tbody></table></div>
+<p>建议页面状态先覆盖“未开启→请求中→净化中→停止中/已完成→失败”，再决定是否展示空气质量和最近更新时间。沃尔沃历史说明把未知归在“不洁净”之下，值得避免：本项目宜明确区分“未知”“空气差”“净化未执行”。这属于设计建议，非任务书新增强制要求。</p>
+<div class="section-h3" id="s7-5">6.5 本轮范围</div>
+<p>检索词包括“汽车 APP 远程 空气净化”“蔚来 APP 空气净化”“远程净化 APP 大众”“沃尔沃 APP 空气净化”。已打开沃尔沃、特斯拉、小鹏、蔚来相关原笔记；大众检索未获得足够直接证据。未完成原10品牌逐项覆盖，不据此判定其是否支持。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s8"><div class="section-h2"><span class="snum">7</span> 远程冰箱</div>
+<p>检索与核验：2026年10月23—25日。本轮通过小红书站内检索、原笔记正文及配图核验，未进行实车测试。只把看清的手机 App 页面列为直接参考；作者描述、车机画面及相邻功能另行标明。历史素材用于设计参考，不代表当前版本或全系车型支持。原文链接保留实际检索令牌，可能需要登录，令牌失效时可按标题站内查找。</p>
+<div class="section-h3" id="s8-1">7.1 任务书范围与结论</div>
+<p>任务书 2.1.1 功能性需求（项目任务书，2.1.1节；本报告已摘录相关备注）的备注为：“远程设置冰箱制冷、保鲜、制热状态，温度设置、远程开启/关闭”。</p>
+<p>按<strong>制冷、保鲜、制热、温度设置、远程开启、远程关闭</strong>六个子项寻找证据。重点参考理想与扩展竞品岚图知音：二者的手机截图清晰，适合直接拆解模式、温度及定时流程。两条均未看到独立“保鲜”模式，不能把制冷中的某个温度直接当成任务书的保鲜状态。</p>
+<div class="section-h3" id="s8-2">7.2 手机 App 直接参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>⭐⭐⭐⭐⭐ <strong>理想</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/690206c8000000000701714d?xsec_token=AB-V-XjboPaAzqpVW35BLlW37KPo1nqqHVid61fXwlxpU=&amp;xsec_source=pc_search&amp;source=web_explore_feed">理想汽车远程操作冰箱</a>；兔哥；2025-10-29</td><td>全部4张已查看。图1：<strong>车控</strong>页“车载冰箱·已关闭”卡片。图2：详情显示“已关闭”；工作模式为“关闭 / 制冷 / 制热”，下方定时开启开关。图3：定时开启页，制冷目标0℃，滑杆范围0–7℃，重复“执行一次”、开启时间05:00、确定。图4：定时制热目标35℃，范围35–50℃。两张预约页均有运行24小时或电量低于10%自动关闭的说明。</td><td>参考把关闭与冷热模式放在同一分段控件、模式联动温度范围、预约摘要与自动关闭说明。正文误写“服务”入口及“制冷最低7度”，截图分别显示车控、0–7℃，本报告按画面记录。图3/4为<strong>定时设置</strong>页，不冒充即时运行反馈；未核验当前温度、运行中、失败、独立保鲜模式。车型及App版本未明确。</td></tr><tr><td>⭐⭐⭐⭐⭐ <strong>岚图知音（扩展对标）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68faf384000000000302e57e?xsec_token=ABj1UjAGt0j_pcePdk98nHzs95AFiZQemEKxAP7Yq1ieU=&amp;xsec_source=pc_search&amp;source=web_explore_feed">忘记开冰箱？有APP就不慌</a>；哈哈；2025-10-24</td><td>已查看图1—5，共6张。图1：车辆页“车载冰箱·已关闭”。图2：关闭状态，目标温度“--”，模式/温度灰显，保留预约摘要。图3：制冷运行、目标8℃、范围-6至15℃、运行8小时、预计执行结束时间。图4：制热运行、目标43℃、范围30–50℃，暖色温度滑杆。图5：冰箱预约，模式、温度、开启时间、时长及“保存预约”。</td><td>参考“总开关+模式切换”、关闭时控件灰显、冷热配色、运行截止时间和预约设置。温度区间仅对应本笔记，不能照搬至大众；图5未核验保存后的结果，图6未查看；未发现独立保鲜模式、当前实测温度或故障状态。</td></tr></tbody></table></div>
+<div class="section-h3" id="s8-3">7.3 正文补充与差异核对</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>正文提供的信息</th><th>证据局限</th></tr></thead><tbody><tr><td><strong>理想 L9（作者标签）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a412e6a0000000022019dd7?xsec_token=ABKVk90wlcjr3j6mP6dyQ8kCEf4JqsttW78YUYYamPkaE=&amp;xsec_source=pc_search&amp;source=web_explore_feed">理想冰箱手机控制</a>；大威天龙；页面显示06-28</td><td>正文称可远程开关、切换冷热和自定义温度，另有锁车续航时长、低电量停止及儿童锁。</td><td>本轮看到的首图是文字提问，未获得这些附加设置的可靠页面，不列为已核验控件；不能用它补齐上表缺失状态。</td></tr></tbody></table></div>
+<div class="section-h3" id="s8-4">7.4 对任务书的覆盖</div>
+<div class="table-wrap"><table><thead><tr><th>子项</th><th>已核验的参考</th><th>覆盖与缺口</th></tr></thead><tbody><tr><td>制冷</td><td>理想制冷预约；岚图运行页</td><td>模式与温度设置有直接证据，理想即时制冷反馈仍需补图。</td></tr><tr><td>保鲜</td><td>暂无独立模式证据</td><td>需确认本项目是独立模式、预设温度，还是状态名称；不自行合并为制冷。</td></tr><tr><td>制热</td><td>理想制热预约；岚图制热运行页</td><td>可参考冷热模式切换后温度区间和色彩变化。</td></tr><tr><td>温度设置</td><td>理想0–7℃/35–50℃；岚图-6–15℃/30–50℃</td><td>以上均为样本的<strong>目标温度</strong>；不应称为当前箱内温度。项目范围与步长以硬件协议为准。</td></tr><tr><td>远程开启/关闭</td><td>理想关闭分段；岚图总开关及已关闭卡片</td><td>能证明控件和页面状态存在，未测试实际指令响应；需补请求中、成功、失败、超时。</td></tr></tbody></table></div>
+<div class="section-h3" id="s8-5">7.5 可用于本项目的设计思路</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>模式层级可比较两种方式：理想“关闭/制冷/制热”合一；岚图总开关独立于冷热模式。本项目多一个“保鲜”，需先确认语义再选结构。</li><li>首屏明确显示开关状态、工作模式、目标温度；有传感器数据时，再单独显示当前温度及更新时间。</li><li>模式切换后同步显示有效温度范围；关闭时避免出现像仍在运行的温度显示。</li><li>运行时长、预计结束时间与低电量自动停止能帮助理解离车后的行为。预约与儿童锁是扩展参考，不擅自升级成任务书必做项。</li></ul>
+<p>本轮仍缺：保鲜专属页、制冷转制热的确认过程、关闭成功反馈、设置失败、失联/低电量导致停止后的提示。当前素材适合第一轮UI方案讨论，不能据此宣称完整实车流程已验证。</p>
+<div class="section-h3" id="s8-6">7.6 本轮范围</div>
+<p>站内检索“汽车 冰箱 APP 远程”，打开理想两条及岚图知音原笔记。搜索中出现极氪、智己、小鹏等候选，尚未完成手机页核验，本轮不列入已验证竞品，也不制作品牌支持率排名。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s9"><div class="section-h2"><span class="snum">8</span> 智能设备（含车载香薰）</div>
+<p>初轮调研：2026年10月25日；车载香薰补充：2026年10月27日。渠道为小红书站内检索与原笔记核验，未操作实车。将清晰手机画面、正文描述和车机/设备实物证据分别记录；不把相邻能力直接算作任务书要求。素材反映拍摄时版本，不代表当前全系支持。原文直达链接保留实际搜索令牌，可能需要登录或因令牌失效而重新站内查找。</p>
+<div class="section-h3" id="s9-1">8.1 任务书范围与结论</div>
+<p>任务书 2.1.1 功能性需求（项目任务书，2.1.1节；本报告已摘录相关备注）备注：“驱蚊器、儿童座椅，空气净化加湿一体机等设备状态显示，远程开启/关闭，新增四个品类”。</p>
+<p>研究子项：设备状态显示、远程开启、远程关闭；分别寻找驱蚊器、儿童座椅、净化加湿一体机素材。“新增四个品类”并未在本条完整列出名称，不能自行补出第四类。</p>
+<p>本轮找到清晰的<strong>儿童座椅厂商手机 App 控制页</strong>，适合参考状态与参数布局；理想座椅联动、小米车载中枢适合补充设备接入和自动化思路。<strong>尚未取得车企手机 App 对这三类设备进行广域远程开关的完整直接证据</strong>，因此本轮不强行评五星。</p>
+<div class="section-h3" id="s9-2">8.2 车载香薰（2026年10月27日新增）</div>
+<p>按用户本次要求增加车载香薰，<strong>不将其自动认定为任务书“新增四个品类”中的第四类</strong>。子topic包括接入/连接、设备状态、开启/关闭、浓度、香型/香氛槽位、耗材余量/提醒、自动化与远程范围。</p>
+<p>本轮小红书检索“车载香薰 APP 控制”时，页面要求登录，未取得新原笔记。以下先提供官方设备及手机控制说明，来源与证据层级单独标明；小红书原笔记和实际手机画面待补。没有安装App、购买设备或操作车辆。</p>
+<div class="section-h4">手机控制参考（官方资料，非小红书）</div>
+<div class="table-wrap"><table><thead><tr><th>品牌/设备</th><th>原文链接</th><th>已核验内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>广汽本田配件／车载香薰系统</strong>，手册编号08R72-30A-H000-80</td><td><a target="_blank" rel="noopener noreferrer" href="https://oss.honda-access.cn/uploadfiles%2FetW4A47cd7.pdf?MDhSNzItMzFSLUgwMCDnvKTmmbrovabovb3pppnolrDkvb%2FnlKjor7TmmI7kuaYucGRm=">车载香薰系统用户手册</a></td><td>官方配件手册写明手机通过蓝牙连接，可预览香薰信息、切换香型与低/中/高浓度；支持3个香薰槽。ACC供电，App关闭后停止出香但设备待机，断开蓝牙后保留原设置运行。</td><td><strong>最贴合车载手机控制方向的官方文字参考。</strong> 要区分“停止出香”与“断电”、“蓝牙断开”与“已关闭”。并非车企主App广域远程流程；本轮只核验手册文字，未视觉核验App界面、配对步骤、耗材提醒或全部适用车型。</td></tr><tr><td><strong>宗盈／智慧香氛App</strong>（设备厂商）</td><td><a target="_blank" rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.joinlink.perfumebox">Google Play官方上架页</a></td><td>开发者说明用于控制车内智能香氛产品。</td><td>适合继续补专用设备App的界面，但本轮未核验其开关、浓度、余量或连接方式，不能仅凭名称认定具体能力；不是车企主App。</td></tr><tr><td><strong>蔚来EL6／原车香氛系统</strong>，海外手册范围</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.nio.com/cdn-static/www/user-instructions/EL6/index.html">EL6用户手册</a></td><td>手册说明在<strong>中控屏温控设置→香氛</strong>中启停、调浓度、选香味。</td><td>用于香型与浓度的车机功能结构补充。<strong>不是手机App证据</strong>，不能把车辆自带香氛直接推定为手机支持远程控制。</td></tr><tr><td><strong>Xiaomi智慧香氛机／米家App</strong>（跨品类参考）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.mi.com/hk/support/faq/details/KA-513307/">小米官方FAQ</a></td><td>官方列明手机可看电量/充电状态、开关、设置出香间隔与持续时间，并有快速出香与感应联动设置。</td><td>可借鉴设备状态、参数与联动分组。<strong>属于家用设备参考，未确认车规适用，不能列作车载竞品或认定离车后可远程操作。</strong> 不把出香时长/频率等同多香型切换或耗材余量。</td></tr></tbody></table></div>
+<div class="section-h4">按子topic核查</div>
+<div class="table-wrap"><table><thead><tr><th>子topic</th><th>本轮参考</th><th>待补与设计要点</th></tr></thead><tbody><tr><td>设备接入/连接</td><td>广汽本田明确蓝牙</td><td>手机发现→配对→已连接；断连、重连、车辆断电。</td></tr><tr><td>设备状态</td><td>本田信息预览；米家电量参考</td><td>车载运行/待机/断电与连接状态分别呈现；是否支持余量传感需核实。</td></tr><tr><td>开启/关闭</td><td>本田手机关闭出香；米家开关</td><td>补真实App开关和指令结果；“停止出香”不必然等于切断电源。</td></tr><tr><td>浓度设置</td><td>本田低/中/高三档</td><td>补选中态、切换反馈；不照搬档位名称与实际强度参数。</td></tr><tr><td>香型/槽位</td><td>本田3槽切换；蔚来车机选香</td><td>补手机槽位、名称、空槽/未识别、当前使用香型页面；不是通过App改变实体香薰棒气味。</td></tr><tr><td>耗材余量/更换提醒</td><td>本轮没有直接证据</td><td>补余量字段、耗尽、更换提醒及更换后识别/重置；不把电量当作香薰余量。</td></tr><tr><td>自动化</td><td>米家感应联动是跨品类线索</td><td>车载上车启动、离车停止及场景模式联动均待核验。</td></tr><tr><td>广域远程控制</td><td>本轮未证实</td><td>蓝牙控制不等于互联网远程；需明确离车可达性、车端供电及指令失败状态。</td></tr></tbody></table></div>
+<div class="section-h4">本项目建议</div>
+<p>详情页可按“设备名与连接状态→出香状态与开关→当前香型/槽位→浓度→耗材信息”组织。电量、香薰余量、连接状态分别命名；硬件不支持测量的余量不要呈现为精确百分比。香型、浓度和设备开关应各有选中/执行反馈。</p>
+<p>车端下电、手机断连及用户主动关闭是不同状态；是否允许离车开启由硬件和协议决定。本轮优先补图对象为广汽本田配件App、蔚来/极氪/理想的手机香氛入口及设备厂商App；仅是检索对象，不宣称它们均支持。后续小红书关键词：车载香薰/香氛 手机App、广汽本田 香薰 蓝牙、汽车App 香氛 浓度、香氛 余量 提醒。</p>
+<div class="section-h3" id="s9-3">8.3 手机 App 局部直接参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌/设备</th><th>直接打开原笔记</th><th>已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>宝贝第一 Joy灵悦Pro（扩展至设备厂商App）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/684b7953000000002102e7d9?xsec_token=ABJknGB5VixAro55-ZRHJ08Ig7vMRX76rkwYrpqEGwzbQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">宝贝第一灵悦APP终于好看了</a>；我是文化人儿；2025-06-13</td><td>已核验首图：设备名Joy灵悦Pro；蓝牙“已连接”、电量53%、入座状态；当前温度26.2℃与设定温度22℃分开展示；温度加减、恒温风/自然风和长按语音控件。</td><td>适合直接参考“连接/电量/入座状态→设备图→当前值/目标值→操作”的层级。<strong>这是座椅厂商App，不是车企App</strong>；可见蓝牙连接不能证明离车后的互联网远程控制。未核验显式总开关、关闭成功、失联或告警页；本轮未逐图查看全部配图。作者表示旧版连接慢，更新后速度尚待测试，可作为体验问题线索。</td></tr></tbody></table></div>
+<div class="section-h3" id="s9-4">8.4 车机、自动化与设备线索</div>
+<div class="table-wrap"><table><thead><tr><th>品牌/设备</th><th>直接打开原笔记</th><th>已核验内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>理想 / 儿童座椅</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a00a49f0000000007024678?xsec_token=ABc6W_kqUwDeiCDmNCBAMtNk1Ifau_G6Y0rzqRLTFW5fA=&amp;xsec_source=pc_search&amp;source=web_explore_feed">安全座椅车机互联｜3步搞定超简单</a>；小理同学；页面显示05-10</td><td>正文详细描述车辆设置→配件→添加配件→儿童座椅→扫描→选择位置→添加→保存；还提及通风、倾角、儿童锁、异常/遗落提醒、删除及校准。视频开头可见车内座椅实物。</td><td>用于设计接入、设备位置、管理动作的候选流程。原笔记以<strong>车机互联</strong>为主题；本轮未核验全部操作页，更没有手机远程流程，不能作为手机App已支持的证据。</td></tr><tr><td><strong>小米 SU7 / 米家驱蚊器与车载中枢</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/665adfa90000000015009a03?xsec_token=ABLbGsumzqrzrwxj7F14PLlsTAccrrgnpgWFGzoMlh1AE=&amp;xsec_source=pc_search&amp;source=web_explore_feed">车内智能驱蚊-这才是小米SU7的正确打开方式</a>；南境云姐；2024-06-01</td><td>正文提出“人在车里开启、人走关闭”；视频抽查可见驱蚊器、人体存在传感器硬件及车内使用实物。</td><td>有代表性的扩展是“设备+车内状态触发自动化”；不能等同汽车App里一键远程开关。本轮未看到可靠的手机配置页，具体触发条件、设备网络和离车供电未核验。</td></tr><tr><td><strong>米家智能车载加湿器</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69219030000000001b0336a3?xsec_token=AB7co2ataJjs9f1oEWEBZ5FUrw70tpFGM6pkUnfQSr66w=&amp;xsec_source=pc_search&amp;source=web_explore_feed">米家智能车载加湿器</a>；每天介绍一款小米产品；2025-11-22</td><td>正文介绍车载/居家适用、雾化及循环加湿。</td><td>仅作为设备线索；未取得手机开关画面，也未证明这是<strong>空气净化加湿一体机</strong>。产品名含“智能”不足以证明车企App接入或远程控制。</td></tr></tbody></table></div>
+<div class="section-h3" id="s9-5">8.5 按任务书子项整理</div>
+<div class="table-wrap"><table><thead><tr><th>子项</th><th>本轮可用参考</th><th>缺口与本项目需确认项</th></tr></thead><tbody><tr><td>驱蚊器状态与开关</td><td>小米车载中枢的自动化使用场景</td><td>尚缺手机设备状态、开关、指令反馈页；需确认通过车端网关还是设备独立联网。</td></tr><tr><td>儿童座椅状态</td><td>宝贝第一手机页：蓝牙、电量、入座、当前/设定温度</td><td>可局部直接参考；需定义车辆端、设备端与App端状态一致性，不能把未连接显示成关闭。</td></tr><tr><td>儿童座椅远程开关</td><td>座椅厂商App有通风模式参数，理想正文有车机联动</td><td>未核验广域远程开关；需区分“设备总电源”“通风”“加热”等动作，不将座椅整体简单抽象为单一开关。</td></tr><tr><td>空气净化加湿一体机</td><td>本轮只有加湿器线索</td><td>还缺真正的一体机App流程，不以此前整车空气净化报告替代。</td></tr><tr><td>新增四个品类</td><td>原备注未列全</td><td>品类清单与各品类动作需澄清；原备注未指定完整清单；车载香薰按用户本次要求作为扩展调研项，不认定为任务书指定的第四类。</td></tr></tbody></table></div>
+<div class="section-h3" id="s9-6">8.6 对本项目的设计建议</div>
+<p>设备列表可统一呈现设备名、所在位置、连接/在线状态、运行状态及主要操作，详情页再按品类展示温湿度、入座或耗材等数据。状态至少区分“未添加、连接中、在线已关闭、在线运行、离线、异常”，避免离线被误解为已经关闭。</p>
+<p>儿童座椅的状态、温度等参数可以参考设备厂商App；设备绑定、位置选择等管理流程参考理想车机线索。远程动作需由设备协议决定：本轮素材不足以确定离车后可执行哪些动作，以及儿童锁、倾角等是否适合远程开放。</p>
+<p>本轮检索“汽车 APP 智能设备 儿童座椅”“汽车 APP 驱蚊器”“汽车 APP 智能配件”“安全座椅 APP 控制 截图”“车载 加湿器 APP”。检索范围扩展至设备厂商，未完成原10个车企逐一核验。当前报告是首轮素材与缺口整理，不能作为品牌功能支持清单。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s10"><div class="section-h2"><span class="snum">9</span> 停车拍照</div>
+<p>调研日期：2026年10月25日。渠道为小红书站内检索与原笔记核验，未操作实车。将清晰手机画面、正文描述和车机/设备实物证据分别记录；不把相邻能力直接算作任务书要求。素材反映拍摄时版本，不代表当前全系支持。原文直达链接保留实际搜索令牌，可能需要登录或因令牌失效而重新站内查找。</p>
+<div class="section-h3" id="s10-1">9.1 任务书范围与结论</div>
+<p>任务书 2.1.1 功能性需求（项目任务书，2.1.1节；本报告已摘录相关备注）在“远程状态查看”下要求：“楼层信息、停车区域、车辆位置（图片、时间）一键分享微信；查询车端智慧寻车开关状态、停车照片展示”。</p>
+<p>按楼层、停车区域、车辆位置、照片、拍摄时间、微信分享、车端智慧寻车开关状态七个子项核查。普通地图定位、哨兵视频、实时远程看车只覆盖相邻需求，不能当成完整停车拍照流程。</p>
+<p><strong>小米的信息摘要最贴近需求；理想适合参考地图与照片、时间和重拍入口；小鹏可补充从爱车页到地图照片的入口。</strong> 微信分享和车端开关状态同步仍缺清晰操作证据。</p>
+<div class="section-h3" id="s10-2">9.2 手机 App 直接参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机相关画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>⭐⭐⭐⭐⭐ <strong>小米</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68e235c30000000003012a00?xsec_token=ABQxMjWM4RRhKeYmAe53o4aHXWcG4rIvP6dG4gvkc8JsI=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小米又懂找车人了</a>；李青云；编辑于2025-10-05</td><td>原配图为停车拍照局部页，显示“停车拍照”开关样式、10月05日下午2:26、车位号26011，以及“车停在2B区，旁边是白蓝色相间的墙和立柱”的描述。照片按俯视、前、后、左、右排列，另有相机加号图标。作者正文称在App发现自动识别停车信息。</td><td>最适合参考“车位号+区域/地标文字+多方向照片+时间”的摘要。截图裁切，未显示完整App外框和入口；<strong>2B区不能擅自解读成B2楼层</strong>。开关可见不证明其是车端开关状态同步；相机加号含义及微信分享未核验。五星指设计参考价值。</td></tr><tr><td><strong>理想 L6（笔记标签）</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a7054ef0000000028003e76?xsec_token=ABp5WuHzYamwdQcC19fmmVt6-xjAv-Qa3pgE4Z0KZF94Y=&amp;xsec_source=pc_search&amp;source=web_explore_feed">停完车再也不用举着手机拍车位号了！</a>；武昌奥德彪；页面显示08-03</td><td>共7图，本轮查看前3图。图1：车控页地图卡片。图2：地图车辆位置、地址和距离151m，闪灯/鸣笛入口；下方“驻车照片”、时间13:11、“重新拍照”及多方向缩略图。图3为车周照片放大示例。</td><td>参考“地理位置+停车照片”的上下组织、时间显示和重拍入口。正文描述楼层/车位识别及一键导航，但本轮截图没有完整证明独立结构化楼层字段或精准车位导航；不把作者描述当作已验证结果。未核验微信分享、开关状态及重拍执行结果。</td></tr><tr><td><strong>小鹏 MONA M03</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6736aec4000000001a034223?xsec_token=AB4rkwK98olLsH7HR49DX69Pr9HLmJYZWHiIF8EjiNxcQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏mona m03有驻车照片了</a>；hope；编辑于2024-11-23</td><td>2图均查看。图1：手机地图、车辆位置与用户位置、照片缩略图（前/后/左等方向）、导航/闪灯/鸣笛。图2：爱车页“已驻车”位置卡片，作者标注从此进入。</td><td>参考爱车页位置卡片→地图与停车照片、找车操作的聚合。属于历史版本；图中部分信息被贴纸遮挡，未核验照片时间、独立楼层/区域字段、微信分享和智慧寻车开关。不能据历史笔记推断当前MONA全系能力。</td></tr></tbody></table></div>
+<div class="section-h3" id="s10-3">9.3 正文补充</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>正文内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>问界 M7 / AITO</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aab31ac000000002700be14?xsec_token=ABSOL5IsI8O497qgu458rJ5egKTft5xLMuTrNKdAf_7w4=&amp;xsec_source=pc_search&amp;source=web_explore_feed">i地库找车神器，手机APP直接看停车照片</a>；我的小m7；页面显示09-17</td><td>正文称停车后自动上传照片，在AITO App查看位置和停车附近环境。</td><td>“智慧寻车”是继续补图的重要同义词。本轮图片尚未核验，不列作手机直接流程；正文关于拍摄方向的措辞不够清晰，不据此归纳摄像头覆盖。</td></tr></tbody></table></div>
+<div class="section-h3" id="s10-4">9.4 对任务书的覆盖</div>
+<div class="table-wrap"><table><thead><tr><th>子项</th><th>已核验参考</th><th>缺口/设计要点</th></tr></thead><tbody><tr><td>楼层信息</td><td>作者正文提到，小米图片未显示独立楼层字段</td><td>需补清晰楼层字段；区号与楼层分开，未知或识别失败明确展示。</td></tr><tr><td>停车区域</td><td>小米“2B区”及墙柱地标描述</td><td>区号、车位号、地标分别组织，不能仅靠一大段描述。</td></tr><tr><td>车辆位置</td><td>理想、小鹏地图与车辆位置</td><td>地图地址定位与地库内车位线索互补，不宣称地图能精确导航至车位。</td></tr><tr><td>图片与时间</td><td>小米多方向照片和完整日期时间；理想照片时间</td><td>建议照片时间常驻，旧照片/上传中/无照片单独表达，避免被误读为实时图像。</td></tr><tr><td>一键分享微信</td><td>本轮未核验完整流程</td><td>需补分享入口→信息预览→微信目标选择的素材；本轮未实际向任何人发送消息。</td></tr><tr><td>查询车端智慧寻车开关</td><td>小米可见开关样式</td><td>需明确是查询还是允许修改，以及查询失败和状态过期；不能仅凭开关外观判断与车端同步。</td></tr><tr><td>停车照片展示</td><td>小米网格；理想缩略图与放大；小鹏地图下方照片</td><td>参考方向标签、默认首图、放大查看；相机加号、重新拍照等操作只按已核验入口记录。</td></tr></tbody></table></div>
+<div class="section-h3" id="s10-5">9.5 对本项目的设计建议</div>
+<p>建议页面先显示楼层/区域/车位和拍摄时间，再展示多方向照片，地图与找车动作作为辅助。微信分享内容宜包含位置文字、照片和拍摄时间；这些是根据任务书提出的方案建议，尚非竞品完整验证结论。</p>
+<p>查询状态与照片应各自有更新时间：智慧寻车当前关闭，不应让旧照片看起来是刚拍的；定位有结果但无停车照片时，应保留定位信息并说明照片缺失。识别不出楼层或车位时，可以呈现原图线索，不猜测填值。</p>
+<p>本轮检索“APP 停车照片 楼层”“停车拍照 APP 小鹏 极氪”“智慧寻车 停车照片 分享”，打开小米、理想、小鹏及问界原笔记。未覆盖原10个品牌全部版本；未核验到的能力不等于该品牌没有。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s11"><div class="section-h2"><span class="snum">10</span> 维修模式</div>
+<p>调研更新：2026年10月26日。通过小红书原笔记核验手机 App 配图与正文，未操作实车。页面显示的月日未明确年份时按原样记录。素材仅代表所展示版本；保留原笔记令牌的直达链接，可能需要登录或因令牌失效重新搜索。</p>
+<div class="section-h3" id="s11-1">10.1 任务书范围与结论</div>
+<p>任务书 2.1.1 功能性需求的备注：“车辆维修模式状态，手机APP会开放部分功能按键，APP界面会做蒙层处理”。</p>
+<p>本主题研究车辆维修期间手机 App 的状态提示、部分车控限制与蒙层呈现。<strong>鸿蒙智行、特斯拉适合参考减少车控入口后的状态页；小米适合参考专用维保车图。三者均未完整证明任务书要求的蒙层与可用按键规则。</strong></p>
+<div class="section-h3" id="s11-2">10.2 手机 App 直接参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>鸿蒙智行／尚界 Z7T</strong>（扩展竞品）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a4bc1cd000000000602301d?xsec_token=ABNmQSJ32-0WihL1ZM06-T4LX1r1ZX0rnCxRItRXY28CY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">原来鸿蒙 app 在维修模式也会显示！</a>；哈呀喜；07-06</td><td>顶部车型“尚界Z7T纯电Max+”；警告图标与“车辆处于维修模式”；车辆示意图显示前门打开。可见区域未展示常规车控快捷按键，下面显示了解新车、立即充电、邀请好友等卡片。</td><td>参考明确的模式提示及简化页面。卡片可见不证明可操作；未证明使用蒙层、哪些车控被禁用，也不能推断鸿蒙智行全车型一致。</td></tr><tr><td><strong>特斯拉 Model Y</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aba5b560000000018015bd7?xsec_token=AB6pputicLU0l2jx1y-TOjdQW0-uedESJhO9y5iNFUe54=&amp;xsec_source=pc_search&amp;source=web_explore_feed">修车时这模式对吗？</a>；BinGo；09-28</td><td>手机页显示 Model Y、电量84%、“维护模式”及车辆图。可见地点、服务、充电、升级、保险等菜单；可见区域没有常规顶部车控快捷行。</td><td>参考“模式状态＋保留信息与服务入口”的组织。菜单存在不等于实际获准使用；未核验蒙层、进入/退出或完整权限。与车机隐藏工程菜单教程区分。</td></tr><tr><td><strong>小米 SU7</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a5a5ead000000000100e75a?xsec_token=ABVwAuUa_8zat5cWuJ74vgvL83WQmEa8P8uUZllt2Owxs=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小米汽车产APP产研团队你很不错</a>；白不啦叽；07-18</td><td>显示 Xiaomi SU7、“维保模式”、464km，车辆用黑色车罩覆盖。下方仍能看到充电、空调信息，以及遥控泊车辅助、直线移车辅助、钥匙等入口。正文称送去维保后发现专门状态图。</td><td>专用车图能让特殊状态更易识别。<strong>黑色车罩是车图表现，不能当作界面蒙层证据</strong>；下方入口是否禁用、能否点击均未验证。</td></tr></tbody></table></div>
+<div class="section-h3" id="s11-3">10.3 任务书子项核查</div>
+<div class="table-wrap"><table><thead><tr><th>子项</th><th>本轮证据</th><th>对设计的启发与缺口</th></tr></thead><tbody><tr><td>维修模式状态</td><td>三者均有明确文字状态</td><td>状态应常驻、可理解；模式与数据更新时间可分别表达。</td></tr><tr><td>开放部分功能按键</td><td>特斯拉保留服务等菜单；小米仍显示若干入口</td><td>仅证实入口可见，尚不能列出真实可用权限。需由项目确定可查看、可操作、受限三类规则。</td></tr><tr><td>App 界面蒙层</td><td>未取得明确证据</td><td>不能把入口隐藏、灰色外观或车罩渲染等同蒙层。需补蒙层范围、提示内容、保留按键及点击反馈的直接样例。</td></tr><tr><td>进入与退出</td><td>未取得完整流程</td><td>任务书主要描述状态页；是否允许用户主动退出需另行确认产品规则。</td></tr></tbody></table></div>
+<div class="section-h3" id="s11-4">10.4 本项目建议</div>
+<p>页面顶部提示“车辆处于维修模式”，用简短说明解释受限原因。蒙层若覆盖车控区域，应保留已确认允许的功能入口，并说明恢复条件；不要让车主误认为网络故障。页面的受限车控与服务、维修进度信息可分别组织。</p>
+<p>以上是结合任务书提出的设计建议，并非竞品已验证的权限方案。本轮仅有截图及正文证据，没有对任何车辆进行模式切换、远程控制或权限测试。未取得证据不代表品牌不支持。</p>
+<div class="section-h3" id="s11-5">10.5 2026年10月26日重新连接记录</div>
+<p>Chrome与内置浏览器重连均超时；备用网页读取仅到登录页，本轮未新增小红书素材。现有待补证结论不变，详见<a href="#s18">待补证清单</a>。</p>
+<div class="section-h3" id="s11-6">10.6 2026年10月27日补查</div>
+<p>小红书检索恢复，检索“维修模式 APP 蒙层 车控”。打开<a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68c53f61000000001c01164c?xsec_token=ABQWAQpE1QjimtFnrDbTVzsul0Ysm5hBYpiMbRi976qjA=&amp;xsec_source=pc_search&amp;source=web_explore_feed">理想APP真省心</a>，核验正文与首图后确认是预约维保流程，不是车辆维修模式下的受限车控，因此不纳入维修模式对标。<strong>蒙层、真实可用按键与恢复状态仍缺直接证据</strong>，本轮没有新增有效维修模式样例。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s12"><div class="section-h2"><span class="snum">11</span> 行程统计</div>
+<div class="section-h3" id="s12-1">11.1 2026年10月27日补查结果（最新）</div>
+<p>小红书已恢复。新增周期图表素材，但属于第三方用车记录App，不能列为特斯拉官方手机功能。以下更新优先于前轮“仅有单程/统计入口”的说明。</p>
+<div class="table-wrap"><table><thead><tr><th>对象</th><th>直接打开原笔记</th><th>已核验的手机相关画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>第三方「有车」App</strong>（扩展参考）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a48f6a9000000001c024f2e?xsec_token=ABAUgAyhFrI22-OC6uOVf6CLaURrNgbwWXDBYg1CwkHgQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">这次更新把之前的问题都修复了</a>；刘导不导；页面07-04（未显示年份）</td><td>共4张，本轮查看图1—3。图3为作者发布的App宣传合成图：行程记录有“周／月／年／全部”，选中全部；摘要卡片显示总里程、总次数、总时长、次均里程，下方蓝色里程趋势图。图1—2展示Model Y图像与地图。正文称新增周期统计与趋势图。</td><td>适合参考周期分段控件→摘要卡片→趋势图层级。<strong>不是车企官方App；Model Y车图不能证明特斯拉官方支持。</strong> 图3是宣传合成图而非本轮实际操作；仅证实周期控件可见与全部视图，未验证年/月切换结果。没有独立日维度、日汇总与下钻；消费趋势不算行程图表。</td></tr></tbody></table></div>
+<p>本轮补齐：小红书渠道中的年/月周期入口、摘要及里程趋势的视觉参考。仍需：车企官方App完整年/月/日视图、日汇总、多行程下钻、图表交互与空态。第三方样例可用于布局启发，不能据此宣称任务书三维度全部覆盖。</p>
+<div class="section-h3" id="s12-2">11.2 前轮记录（历史内容，以上述最新补查为准）</div>
+<p>调研更新：2026年10月26日。本轮为初轮调研，已核验小红书手机 App 配图与正文；随后浏览器连接连续超时，完整年/月/日图表证据尚待补齐。原笔记链接保留实际令牌，可能需要登录或重新站内搜索。未操作实车，不以截图推断当前全系能力。</p>
+<div class="section-h3" id="s12-3">11.3 任务书范围与结论</div>
+<p>任务书 2.1.1 功能性需求备注：“按照年、月、日维护，查看车辆的行程统计图表”。</p>
+<p><strong>重点是按时间周期汇总与查看统计图表。</strong> 单次路线、行程成绩、智驾占比、月报入口可辅助参考，但不等于完整覆盖。</p>
+<p>本轮宝马最适合参考统计、历史行程、月报的入口分类；小鹏适合参考单程详情与首页摘要。尚未找到通过本轮小红书画面证明年、月、日三种维度全部具备的样例，暂不标记五星直接对标。</p>
+<div class="section-h3" id="s12-4">11.4 手机 App 参考表</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>宝马／My BMW</strong>（X3标签）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a96bc7f000000002b01e232?xsec_token=ABbDDkVzh261sulGrvh-4mkOgVLWj5h0RN8d_CqJIXEs8=&amp;xsec_source=pc_search&amp;source=web_explore_feed">宝马app不显示行程信息了</a>；09-01</td><td>“我的行程”页分为：行程统计（行程统计、能耗统计）、历史行程（上一次行程、所有行程）、行程报告（八月报告）。画面显示0km、0次行程，正文是数据不显示的求助。</td><td>参考统计、历史、月报的清楚分组；也暴露了“0”和“数据未同步”易混淆的问题。<strong>没有展开图表，不能证明年/月/日切换，也不能把0当作真实无行程。</strong></td></tr><tr><td><strong>小鹏 X9</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a878cdb0000000005033a8a?xsec_token=AB_YCq9FvItHJZkgZMk0_vpVA3S32ikGXwXQtgln-2sM8=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏App行程记录“史诗级”更新…</a>；自律版songzehui；编辑于08-21</td><td>已查看图1：行程记录页含路线图、7.1km、22min、14.4kWh百公里电耗；下方有辅助驾驶成绩、占比环图、行程高光与“分享精彩行程”。正文称图3/4/5是分享样式，本轮未逐一核验。</td><td>参考“路线＋核心数字＋详情”的单程信息层次。该环图是辅助驾驶占比，<strong>不是跨日期行程统计图</strong>；不能据此证明年月日统计。</td></tr><tr><td><strong>小鹏 X9</strong>（首页补充）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aa24a7a0000000012036d42?xsec_token=ABCVnvPpKZb4c0CZ_dQBb-26jgPHEBi82z9TivF_URM10=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏APP新版本太贴心</a>；开小鹏X9的松哥；09-10</td><td>爱车首页展示本次驾驶卡片：17.6km行驶里程、13.9km辅助驾驶里程、37min辅助驾驶时长、78%占比，以及“查看本次行程成绩单”入口。</td><td>参考首页轻量摘要→单程详情。正文评价单独记录，不当作周期统计证据；本轮只核验首图。</td></tr></tbody></table></div>
+<div class="section-h3" id="s12-5">11.5 周期图表的补充来源（非小红书）</div>
+<div class="table-wrap"><table><thead><tr><th>品牌与来源</th><th>链接</th><th>可支持的内容</th><th>局限</th></tr></thead><tbody><tr><td>小鹏汽车在线社区／车主高教授，2023-08-15</td><td><a target="_blank" rel="noopener noreferrer" href="https://bbs.xiaopeng.com/article/1932775">行程记录功能知多少</a></td><td>车主教程描述路径为小鹏车控页→用车数据→行程记录；周期按周/月切换，灰线为行驶里程、绿线为智驾里程，可看每天驾驶里程。</td><td>这是品牌社区内的<strong>历史车主教程，并非官方承诺</strong>。本轮核验正文，未把其中全部配图逐张视觉核验。周/月切换不等于年/月/日切换，不能证明2026年当前版本一致。</td></tr></tbody></table></div>
+<div class="section-h3" id="s12-6">11.6 任务书子项核查</div>
+<div class="table-wrap"><table><thead><tr><th>子项</th><th>本轮证据</th><th>仍需补齐</th></tr></thead><tbody><tr><td>年维度</td><td>本轮小红书未核验</td><td>年选择器、全年按月图表、跨年切换。</td></tr><tr><td>月维度</td><td>宝马可见八月报告入口；历史小鹏教程描述月周期</td><td>小红书原笔记中的月度统计完整图表与交互。</td></tr><tr><td>日维度</td><td>小鹏可见具体单程数据；历史教程描述逐日里程</td><td>独立日汇总、同日多行程与图表，不能以单程代替整天。</td></tr><tr><td>统计图表</td><td>小鹏配图可见智驾占比环图；历史教程描述周/月里程趋势</td><td>行程周期图的轴、单位、选中日期与数据联动。</td></tr><tr><td>历史行程</td><td>宝马入口；小鹏单程页</td><td>从周期总览到某日，再到某次行程的完整流程。</td></tr><tr><td>异常与空态</td><td>宝马求助素材显示统计为0、正文称数据不显示</td><td>明确区分真实0、未授权、未同步、加载失败及无行程。</td></tr></tbody></table></div>
+<div class="section-h3" id="s12-7">11.7 本项目建议</div>
+<p>建议以“年／月／日”作为统计总览的明确切换，所选周期和里程、时长、能耗摘要同步更新；年视图按月、月视图按日展示图表，日视图汇总当天并列出单次行程，支持下钻查看详情。具体指标口径仍需项目确认。</p>
+<p>行程统计与智驾报告应有各自清楚的重点：本主题先回答何时、开了多少、用了多久及能耗表现；辅助驾驶数据作为关联入口。空态应说明原因与更新时间，避免把同步失败显示成真实0。以上均为设计建议，尚非已完成竞品验证的方案。</p>
+<p>检索范围包括“汽车 APP 行程统计 月 年”，核验小鹏与宝马原笔记，并以历史车主教程补充周期图表线索。未覆盖原10品牌全部版本；本报告保留具体证据缺口，不宣称完整竞品覆盖。</p>
+<div class="section-h3" id="s12-8">11.8 2026年10月26日重新连接记录</div>
+<p>Chrome与内置浏览器重连均超时；备用网页读取仅到登录页，本轮未新增小红书素材。现有待补证结论不变，详见<a href="#s18">待补证清单</a>。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s13"><div class="section-h2"><span class="snum">12</span> 智驾报告</div>
+<div class="section-h3" id="s13-1">12.1 2026年10月27日补查结果（最新）</div>
+<p>小红书已恢复，新增手机月报和周期图表，以下更新优先于前轮“尚无当前小红书月度图表”的表述。未操作实车，指标仅按画面记录，不用作智驾能力或安全排名。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机App画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>小鹏X9</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a219bc70000000022018667?xsec_token=ABIz_uIVGGQLTm5KTRCcSN3kWa_BhEWnB7W2dmwQMnFj0=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏辅助驾驶月报</a>；开小鹏X9的松哥；页面06-04，图中报告期为2026年05月</td><td>共4图，本轮看图1—3。图1“我的辅助驾驶月报”，2026年05月旁有下拉箭头；辅助驾驶里程437.56km、里程占比32.77%、天数占比80.65%，均有较上月变化；底部分享月报。图2按05.01—05.31横轴展示绿色逐日趋势，下方“辅助驾驶日历”热力图。图3为车辆实物。</td><td><strong>最有用的新证据是月摘要＋较上月变化＋逐日曲线＋热力日历。</strong> 曲线纵轴单位和热力颜色含义未完整显示，不擅自解释为某单位。下拉入口不等于实际切换已核验；热力图不等于独立日统计页。年视图、日下钻、分享结果均未核验；宣传式称号与疲惫缓解说法不作为客观指标。</td></tr></tbody></table></div>
+<p>本轮补齐：真实手机月报、月度指标、上月对比、月内逐日图表与日历。仍需：年视图、独立日汇总及行程下钻、选中日期反馈、无数据/失败状态。任务书“新增四个行车数据”仍未列名，不能把上述指标凑成项目指定四项。</p>
+<div class="section-h3" id="s13-2">12.2 前轮记录（历史内容，以上述最新补查为准）</div>
+<p>调研日期：2026年10月26日。本轮复用此前已核验的小红书手机素材，补充检索相关来源。小红书命令行工具不可用，浏览器连接持续超时，未完成新笔记扩展；报告为初轮，保留证据缺口。原笔记直达链接在表格内，令牌可能失效或需要登录。未操作实车。</p>
+<div class="section-h3" id="s13-3">12.3 任务书范围与结论</div>
+<p>任务书2.1.1备注：“按照年、月、日维护，查看车辆的智驾统计图表，新增四个行车数据”。</p>
+<p>研究子项为年统计、月统计、日统计、智驾图表、新增四个行车数据。<strong>本条未列出四项名称，不能直接把竞品的四个指标当作项目指定指标。</strong></p>
+<p>当前最明确的手机参考是小鹏：车控首页成绩摘要→单次行程报告，图表与高光事件组织清楚。它适合作为局部参考，尚不足以证明完整年/月/日流程，暂不标五星完整对标。与行程统计的区别在于辅助驾驶使用及事件表现，而不是普通总里程和能耗的重复展示。</p>
+<div class="section-h3" id="s13-4">12.4 手机 App 参考表</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>此前已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>小鹏 X9</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a878cdb0000000005033a8a?xsec_token=AB_YCq9FvItHJZkgZMk0_vpVA3S32ikGXwXQtgln-2sM8=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏App行程记录“史诗级”更新…</a>；自律版songzehui；编辑于08-21</td><td>已查看图1：行程记录页含路线图、7.1km、22min、14.4kWh百公里电耗；下方有辅助驾驶成绩、占比环图、行程高光与“分享精彩行程”。正文称图3/4/5是分享样式，本轮未逐一核验。</td><td>参考“路线＋核心数字＋详情”的单程信息层次。该环图是辅助驾驶占比，<strong>不是跨日期行程统计图</strong>；不能据此证明年月日统计。</td></tr><tr><td><strong>小鹏 X9</strong>（首页补充）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aa24a7a0000000012036d42?xsec_token=ABCVnvPpKZb4c0CZ_dQBb-26jgPHEBi82z9TivF_URM10=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏APP新版本太贴心</a>；开小鹏X9的松哥；09-10</td><td>爱车首页展示本次驾驶卡片：17.6km行驶里程、13.9km辅助驾驶里程、37min辅助驾驶时长、78%占比，以及“查看本次行程成绩单”入口。</td><td>参考首页轻量摘要→单程详情。正文评价单独记录，不当作周期统计证据；本轮只核验首图。</td></tr></tbody></table></div>
+<p>上表沿用行程统计调研的画面记录，本轮未重新打开核验。第一条用于报告详情，第二条用于首页入口；均为单程，不应归为日汇总。所展示的占比、时长与高光不构成智驾安全能力排名。</p>
+<div class="section-h3" id="s13-5">12.5 其他来源补充（非小红书）</div>
+<div class="table-wrap"><table><thead><tr><th>品牌／来源</th><th>链接</th><th>已核验内容</th><th>参考范围与限制</th></tr></thead><tbody><tr><td>小鹏汽车在线社区／车主高教授，2023-08-15</td><td><a target="_blank" rel="noopener noreferrer" href="https://bbs.xiaopeng.com/article/1932775">行程记录功能知多少</a></td><td>历史教程正文描述周/月切换、行驶里程与智驾里程曲线；未使用智驾时相关数据可能不显示。</td><td>可补充周期图表及条件空态思路；是历史车主教程，非官方承诺，本轮未逐张核验配图，不能证明当前版本或年/月/日完整支持。</td></tr></tbody></table></div>
+<div class="section-h3" id="s13-6">12.6 按子 topic 核查</div>
+<div class="table-wrap"><table><thead><tr><th>子 topic</th><th>现有参考</th><th>待补证据</th></tr></thead><tbody><tr><td>年统计</td><td>暂无清晰小红书证据</td><td>年份选择、按月趋势、跨年切换。</td></tr><tr><td>月统计</td><td>历史社区教程描述周/月曲线</td><td>当前手机月度智驾统计页及切换过程。</td></tr><tr><td>日统计</td><td>小鹏单程有具体日期与数据</td><td>每日汇总与同日多段行程，单程不能替代整天。</td></tr><tr><td>统计图表</td><td>小鹏单程占比环图、首页占比条</td><td>周期趋势图、轴与单位、选中点数值及统计口径。</td></tr><tr><td>新增四个行车数据</td><td>任务书未明确名称</td><td>需业务定义；不自行以里程、时长、占比、高光凑齐。</td></tr><tr><td>首页入口与详情</td><td>小鹏成绩卡与查看成绩单；单程页与分享入口</td><td>本轮未核验点击跳转、分享结果及失败恢复。</td></tr><tr><td>无数据与更新</td><td>历史教程提供条件空态线索</td><td>未开通、未使用、未同步、加载失败等状态。</td></tr></tbody></table></div>
+<div class="section-h3" id="s13-7">12.7 本项目建议</div>
+<p>可采用“年/月/日→所选周期摘要→趋势图→具体行程”的层级；辅助驾驶里程、时长、占比等仅作为候选指标，四项新增数据须先明确。若显示占比，需说明分母是总里程还是总时长；泊车次数不应与道路辅助驾驶里程混为同一单位。</p>
+<p>首页用简短卡片承接最近一次行程，周期报告独立展示。高光事件可作为详情补充，但不把少踩踏板次数、使用占比等呈现为安全评分；这些是设计建议，并非竞品完整流程验证。</p>
+<p>本轮未获得其他品牌足够清晰的新手机素材，不以车机画面或宣传文案凑齐品牌数。后续优先补理想、鸿蒙智行、蔚来等手机周期报告，当前不宣称这些品牌已具备对应流程。</p>
+<div class="section-h3" id="s13-8">12.8 2026年10月26日重新连接记录</div>
+<p>Chrome与内置浏览器重连均超时；备用网页读取仅到登录页，本轮未新增小红书素材。现有待补证结论不变，详见<a href="#s18">待补证清单</a>。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s14"><div class="section-h2"><span class="snum">13</span> 远程车辆状态报告（含提醒）</div>
+<div class="section-h3" id="s14-1">13.1 2026年10月27日补查结果（最新）</div>
+<p>小红书已恢复，新增实际车窗未关提醒的三种手机承载形式。以下更新优先于前轮“新增小红书提醒流程尚待补证”；本轮仍未核验告警处理后的恢复闭环。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机App相关画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>小米汽车</strong>（车型未明确）</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a7aeb8b000000002701fe04?xsec_token=ABKLUjPnVGa1os3PmupIvqmYxPL_UzpqFmyAzJZ6dF-tY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">没关车窗，小米操碎了心</a>；咖啡泡面；页面08-11（未显示年份）</td><td>3图全部核验。图1系统通知中心：小米汽车消息含车辆昵称、时间与“车窗未关”，多次提醒并列。图2短信，包含相同车况与时间。图3App“通知”：全部、车辆、服务、商城、提醒、互动分类；“车辆安全”卡片含未读点、车辆昵称、事件时间、车窗未关及相对时间。正文称洗车后主动留窗通风，收到App消息、push和短信。</td><td>可直接参考“事件时间＋车辆＋异常”的跨渠道一致表达及站内消息分类。<strong>截图不是从推送点击跳转的连续操作，也没有关窗、恢复或提醒设置。</strong> 多条消息不能推断固定提醒间隔或所有用户均同样发送；车主有意通风的场景提示需考虑重复提醒策略。</td></tr></tbody></table></div>
+<p>本轮补齐：系统推送、短信与App内异常车况消息的真实画面。仍需：消息订阅设置、推送点击落点、异常部件详情、处理动作与恢复反馈、车辆故障类提醒、实时刷新与失败状态。保留此前小鹏更新时间样例及官方功能补充，不把门窗提醒视为所有故障告警的证明。</p>
+<div class="section-h3" id="s14-2">13.2 前轮记录（历史内容，以上述最新补查为准）</div>
+<p>调研日期：2026年10月26日。本轮小红书浏览器连接持续超时，暂以此前已核验手机素材及新检索的官方功能说明整理初轮。<strong>新增小红书提醒流程尚待补证</strong>；官方来源单独列出，不当成已验证的手机 UI。未操作实车，也未触发或发送任何通知。</p>
+<div class="section-h3" id="s14-3">13.3 任务书范围与结论</div>
+<p>任务书2.1.1备注：“远程实时查看车辆状态，在特定场景下接收消息提醒并提醒用户异常车况”。</p>
+<p>拆为状态查询、数据时效、特定场景消息、异常车况提示四个子项。此处的“报告”不能只理解成周期月报，也不应缩窄为单纯胎压或车辆体检。</p>
+<p><strong>状态展示可参考小鹏车控首页；门窗未关提醒可参考特斯拉与岚图的官方规则；车辆故障提示可补充大众海外 GoConnect。</strong> 后三者目前只核验文字能力，未取得小红书“通知→详情→处理→恢复”的完整手机流程。</p>
+<div class="section-h3" id="s14-4">13.4 小红书手机素材</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>此前已核验的手机 App 画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>小鹏 X9</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aa24a7a0000000012036d42?xsec_token=ABCVnvPpKZb4c0CZ_dQBb-26jgPHEBi82z9TivF_URM10=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小鹏APP新版本太贴心</a>；开小鹏X9的松哥；09-10</td><td>首图车控首页显示续航463km、油电分项、车门已锁、“数据更新于2小时前”；下方有车锁、车窗、后备箱、直线召唤等入口。</td><td>参考状态、更新时间和控制入口的组织。<strong>两小时前数据不是本轮验证的实时车况</strong>；按钮存在不证明异常可用性，未展示系统通知或异常详情。本轮复用此前画面核验。</td></tr></tbody></table></div>
+<div class="section-h3" id="s14-5">13.5 官方功能说明补充（非小红书）</div>
+<div class="table-wrap"><table><thead><tr><th>品牌／具体版本范围</th><th>原文链接</th><th>已核验的功能规则</th><th>设计参考与限制</th></tr></thead><tbody><tr><td>特斯拉 Model Y／所链接手册版本</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.tesla.com/ownersmanual/modely/zh_cn_us/GUID-B4E78C91-BCD3-4713-90AA-F3E2406158CC.html">车窗：锁车提醒</a></td><td>手册说明忘记关窗时车辆可能向手机 App 发通知；通过车端“控制→车锁→锁车提醒→车门和车窗”设置。</td><td>参考场景事件与订阅设置的关联。设置路径在车机，不是手机设置流程；未核验通知文案、到达时延和点击落点，不把“可能”改写成必达。所链接手册地区为zh_cn_us，不外推中国全车型。</td></tr><tr><td>岚图／所链接车型用户指南</td><td><a target="_blank" rel="noopener noreferrer" href="https://m.voyah.com.cn/userguide/h97c/h97c-23.html">电动车窗：车辆锁止车窗未关提醒</a></td><td>车辆锁止后，如检测到四门车窗或天窗未完全关闭，岚图 App 将发送相应提示。</td><td>参考“锁止＋未关闭”的明确触发条件；天窗等配置依指南标注。未核验手机通知截图、设置入口、处理结果，不与雨天自动关窗合并为同一能力。</td></tr><tr><td>大众 GoConnect／新加坡市场</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.volkswagen.com.sg/owners-and-service/about-my-car/goconnect-app">GoConnect App</a></td><td>官方页面说明可查看车辆技术状态；车辆异常或仪表警告出现时通知用户，App 中可查看警告详情。</td><td>参考“异常提示→警告含义→采取行动”的信息链。是海外市场功能说明，不代表上汽大众 CEA车型支持；本轮未视觉核验完整手机页面与通知交互。</td></tr><tr><td>大众 My Volkswagen 行车助理／台湾市场、配套装置</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.volkswagen.com.tw/zh/about-volkswagen/experience_vw/technology_and_funtodrive/my-volkswagen/app_connectivity.html">My Volkswagen 行车助理</a></td><td>官方页列出行驶/停放/被拖吊状态、低油量提醒，以及超出驾驶时间或地理围栏的通知；推播需在 App 设置开启。</td><td>参考把被动查询与主动场景通知区分。依赖地区服务与配套装置，不能外推上汽大众；其页面低油量阈值不直接照搬到项目。</td></tr></tbody></table></div>
+<div class="section-h3" id="s14-6">13.6 按子 topic 核查</div>
+<div class="table-wrap"><table><thead><tr><th>子 topic</th><th>现有证据</th><th>需要补齐的手机流程</th></tr></thead><tbody><tr><td>车辆状态查看</td><td>小鹏首页车锁、油电与续航；大众官方状态说明</td><td>车门/窗/尾门、胎压、灯光等具体详情；任务书未逐项列出，需确定范围。</td></tr><tr><td>实时性与刷新</td><td>小鹏显示数据更新时间</td><td>刷新中、离线、唤醒失败、旧数据，以及不同部件时间不一致。</td></tr><tr><td>特定场景通知</td><td>特斯拉、岚图门窗未关；大众地区版时间/围栏事件</td><td>通知设置→实际系统推送→点击进入对应状态。</td></tr><tr><td>异常车况</td><td>GoConnect官方说明涵盖仪表警告</td><td>故障位置、含义、建议动作、联系服务等实际页面。</td></tr><tr><td>处理与恢复</td><td>尚无完整链路证据</td><td>处理后再次查询、通知状态更新与重复消息策略。</td></tr></tbody></table></div>
+<div class="section-h3" id="s14-7">13.7 本项目建议</div>
+<p>建议以“状态总览→异常明细→处理建议”组织主动查询；通知则显示发生时间、异常部位、简短建议，并直达对应详情。用户点击旧通知后，应展示最新车况，同时保留原事件发生时间，避免把已恢复事件当成当前异常。</p>
+<p>数据未刷新时保留时间标记并提示状态可能过期；未知、离线与正常分开。事件提醒与故障提醒可按紧急程度分层，去重、恢复及通知权限关闭的反馈需要一起定义。以上为设计建议，不代表竞品已完成验证的实现。</p>
+<p>本轮未取得新增小红书原笔记，故不把官方说明列为手机直接流程、不标五星、不宣称完整完成渠道调研。后续优先补特斯拉/岚图门窗通知、上汽大众或一汽大众异常车况，以及小鹏/小米的状态刷新与消息中心。</p>
+<div class="section-h3" id="s14-8">13.8 2026年10月26日重新连接记录</div>
+<p>Chrome与内置浏览器重连均超时；备用网页读取仅到登录页，本轮未新增小红书素材。现有待补证结论不变，详见<a href="#s18">待补证清单</a>。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s15"><div class="section-h2"><span class="snum">14</span> AI萌宠</div>
+<p>调研日期：2026年10月21日；格式更新：2026年10月22日。用途：TOPX 上汽大众 CEA2.X 项目应标研究。</p>
+<div class="section-h3" id="s15-1">14.1 研究结论与范围</div>
+<p>本轮收紧为手机端流程研究：小米YU7保留为五星直接流程样本；理想新增手机扫码上传片段，列为跨端流程补充，尚不能确认为原生App。smart、NOMI、小P、萤火虫、大众精灵等只保留为车机/角色体验附录，不列为手机App流程对标。原附录星级仅表示角色体验参考价值。</p>
+<p>任务书中AI萌宠的明确范围是上传图片、访问后台生成静态或动态壁纸、查看生成结果。本轮将智能助手作为扩展研究方向，不将语音车控、实体机器人硬件或成长养成机制自动纳入采购需求。</p>
+<p>覆盖原10品牌：上汽大众、特斯拉、理想、蔚来、小鹏、小米汽车、问界、极氪、比亚迪、宝马。扩展检索smart、萤火虫、乐道、阿维塔、奔驰，以及QQ音乐车机生态。检索覆盖不等于每条已核验；未进行App实机测试。</p>
+<div class="section-h3" id="s15-2">14.2 手机端直接对标与跨端流程补充</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机流程或内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>⭐⭐⭐⭐⭐ 小米YU7 直接流程对标</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6aa92602000000002601e37c?xsec_token=ABsUQI9i910IJdpJejT4iLJazIg8p7K1XzwEVrN-RDKJ0=&amp;xsec_source=pc_search&amp;source=web_explore_feed">YU7 隐藏玩法｜上传毛孩子到车机萌宠</a>；西米的YU7；09-15。无年份日期按页面原样记录。</td><td>已读正文并抽看视频约00:15、00:25。00:15出现手机相册分享面板及“小米汽车”目标；00:25出现手机App“AI萌宠动作生成成功”、生成猫咪卡片和“在车机&gt;超级玩具箱查看”提示。封面车机有萌宠选择与行车桌面卡片、后排屏保、驻车空间入口。</td><td>照片输入→手机处理→生成成功→引导去车机使用，是本轮最贴近任务书的实际链路。正文提及行车/转弯/驻车动态反应，未逐一观看验证；未确认静态壁纸、失败状态、生成耗时和完整编辑流程。</td></tr><tr><td>⭐⭐⭐⭐ 理想 手机扫码上传补充</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/697b3dfd000000001a032560?xsec_token=ABPa30SKuvHYrR8TPhpXVO25_sJmf66wrdq96EVvS2Cv0=&amp;xsec_source=pc_search&amp;source=web_explore_feed">理想汽车萌宠3D屏保保姆级教学，速看！</a>；家有31；页面显示01-29</td><td>视频约02:50。约00:59手机扫描车机“上传图片”二维码；约01:15手机显示宠物图片处理画面。正文为OTA8.2“艺术相框”。</td><td>参考车机发起→手机扫码→处理照片的跨端衔接。扫码后原生App/H5尚未辨明；生成进度、作品管理和删除未核验，不与小米App流程等同。</td></tr></tbody></table></div>
+<div class="section-h3" id="s15-3">14.3 已读的流程问题参考</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>本轮观察</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>QQ音乐车机版 扫码异常</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6ab62ca4000000000a0240c4?xsec_token=ABFUXB5DQ9NH55GqlU48DIM7vuHxOefS1QcGYGlXyN8Yk=&amp;xsec_source=pc_search&amp;source=web_explore_feed">QQ音乐车机版上新了一个AI萌宠播放器</a>；薄荷柠檬茶；09-25。无年份日期按页面原样记录。</td><td>已读原正文和评论：作者称点击“立即成为”后要求扫码上传宠物照片，但扫码后退出且没有上传入口；评论有名为QQ音乐小秘书的账号跟进。图片本轮未加载。</td><td>参考扫码接力、App/H5路由及失败反馈问题。属于车主问题报告，未验证成功生成链路，不确认适用车型或将该账号认定为已认证官方。</td></tr></tbody></table></div>
+<div class="section-h3" id="s15-4">14.4 车机与实体助手附录 不作手机App流程对标</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已观察的车机或角色内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>理想</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69741aca0000000021031875?xsec_token=ABYHFeWpgdH3sP46z_RPFPPbDhxtorWsSV1TNE5U8NCSM=&amp;xsec_source=pc_search&amp;source=web_explore_feed">理想OTA8.2｜可以上传哈基米照片做屏保了</a>；躺不平的理想i8车主；编辑于01-24。无年份日期按页面原样记录。</td><td>打开原笔记，封面车机展示两只拟人化猫咪的3D萌宠屏保；标题明确上传照片做屏保。</td><td>本条当前只核验车机结果与作者标题，手机上传页面、生成机制尚未核验。适合参考宠物识别、穿搭造型与屏保构图，不能当作已确认的App流程。</td></tr><tr><td>smart</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a5b878d000000001302ed76?xsec_token=ABiWntqi_Xxccxxu-QukJS7CTOLP2JNPV1CcLhG1rZBV0=&amp;xsec_source=pc_search&amp;source=web_explore_feed">解锁smart精灵助手换装快乐</a>；malyn梅铃；07-18。无年份日期按页面原样记录。</td><td>第1张车机空调页右下角出现熊猫角色。正文描述精灵狐戴棒球帽、新增熊猫与博士帽、车内换装。</td><td>参考角色库、配饰、常驻位置、品牌角色陪伴。仅查看首张及正文；尚未核验手机管理、换装入口、语音能力。角色换装不等于上传照片AI生成。</td></tr><tr><td>小鹏 AI小P</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68365073000000002101b464?xsec_token=ABYYgFEEx-jI4zCYD68cifXHjfMo0amN-bB5AJ4gI9PEY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">教你给AI小P换衣服</a>；这又怎么讲；2025-05-28。无年份日期按页面原样记录。</td><td>车机画面展示机器人小P带皇冠等配饰；正文称说“小P换装”可换皮肤。</td><td>适合参考语音触发换装、品牌助手与个性外观。当前没有手机App操作证据；具体命令效果与可选皮肤需继续逐段核验。</td></tr><tr><td>蔚来 NOMI</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a193f7a00000000380349af?xsec_token=AB13MahkkDDf3XMNPQJjyNv9GO6rPnZ1Y3bV68xUuxC-4=&amp;xsec_source=pc_search&amp;source=web_explore_feed">蔚来Nomi表情最全攻略，你解锁了几个小可爱</a>；爆汁菠萝派；编辑于05-29。无年份日期按页面原样记录。</td><td>原笔记首图为实体NOMI屏幕表情，如眨眼、手势符号；正文为表情收集。</td><td>适合参考低复杂度表情、角色记忆与收藏感；不是手机App上传、生成或管理萌宠的证据。未核验各表情触发条件。</td></tr><tr><td>上汽大众 ID.ERA 9X 大众精灵</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a3e8c59000000001102c8a0?xsec_token=ABqYVzApYYTwjLfJ80b694XpBwJI066MX0mgARQC-eFOk=&amp;xsec_source=pc_search&amp;source=web_explore_feed">大众精灵，可以自定义形象啦！</a>；ID.ERA云南英茂悦众；06-26。无年份日期按页面原样记录。</td><td>车机显示多个人物形象卡片；正文给出菜单→大众家园，描述可选择衣服、自定义声音。</td><td>用于了解现有品牌角色及定制入口。图片未证明手机端配置、照片生成；账号疑似经销商，身份未独立核验；不能外推至本项目车型。</td></tr><tr><td>萤火虫 发光小队</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6ad089b80000000014038fc4?xsec_token=ABMRYqLaFth0gyq-nfr45WD-9OHkv7kQ_eVagkBLeu0iQ=&amp;xsec_source=pc_search&amp;source=web_explore_feed">萤火虫桌面宠物，谁的车上还没有这个小可爱？</a>；还是小花爸爸；页面显示6天前。无年份日期按页面原样记录。</td><td>封面车机“发光小队”面板包含猫、狗、浣熊图标，首个名为“小咪橘长”；可见“显示为挂件”开关及布局预览。</td><td>适合参考角色挑选、显示开关和挂件呈现。评论混入真实宠物留车/空调功能理解，不能据此认定桌面宠物与真实宠物模式相同。手机端无证据。</td></tr></tbody></table></div>
+<div class="section-h3" id="s15-5">14.5 手机端补查与排除记录</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>本轮检索/检查</th><th>结论</th></tr></thead><tbody><tr><td>smart</td><td>“smart APP 精灵助手 换装”；打开“smart使用技巧｜更换精灵皮肤”，可见车机换肤画面</td><td>仍属车机参考，未找到合格手机App流程</td></tr><tr><td>蔚来</td><td>“蔚来 APP NOMI 形象 设置”；打开“30S搞定，NOMI的设置教程”，正文步骤明确在中控屏操作</td><td>不列为手机App流程</td></tr><tr><td>小鹏</td><td>“小鹏 APP 小P 形象 换装”；打开“快来领取你的小P新皮肤”</td><td>正文为2024年限时活动和车辆使用条件，未取得手机配置流程；不作为当前可用能力证明</td></tr><tr><td>极氪</td><td>“极氪 APP 萌宠 自定义 照片”；打开“生成独一无二的Eva，可爱加倍”</td><td>封面为车机生成/装扮界面，不是手机App；“App图鉴养猫”另条图片未加载，不采用</td></tr><tr><td>问界</td><td>“问界 APP 上传 萌宠 壁纸”；打开“问界M7 苹果手机自定义壁纸教程”</td><td>正文实际为WPS云文档同步图片到车机，是普通壁纸传输旁路，不是车企App AI萌宠流程</td></tr></tbody></table></div>
+<p>以上为本轮有限检索结果，不能由“未找到”推断品牌不支持。未对其余品牌宣称新增核验。</p>
+<div class="section-h3" id="s15-6">14.6 其余品牌与扩展方向 待核验线索</div>
+<p>以下只记录站内实际搜索结果，尚未阅读详情，不作为功能事实。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>方向</th><th>原笔记</th><th>下一步核查</th></tr></thead><tbody><tr><td>极氪</td><td>EVA机器人</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a1a573b000000003501c214?xsec_token=ABvFQyfdrOTuJldzHH7reSlLju-TPiuiV_JtiCPZf_4WY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">极氪｜eva机器人线下实测 造型可爱表情多样</a></td><td>实体/屏幕表达、手势互动；需区分线下展示与可购量产配置。</td></tr><tr><td>问界</td><td>小艺／萌宠动态壁纸</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6851af260000000023011fcc?xsec_token=ABfkD4BwuTVKW19P6B1FxAe4xzyfJfMB18XUIHfUeE1cw=&amp;xsec_source=pc_search&amp;source=web_explore_feed">一分钟教会你设置问界M9萌宠动态壁纸</a></td><td>核查系统预设与自定义照片、静态/动态、手机与车机入口。</td></tr><tr><td>比亚迪</td><td>小迪／萌宠桌面</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68b129c5000000001b036ed5?xsec_token=ABWjG9sPb7hYwWVD1gZkyLb9tf5gwQBftoWruIfyiWkRI=&amp;xsec_source=pc_search&amp;source=web_explore_feed">比亚迪的萌宠桌面终于来啦！</a></td><td>核查是否原厂、第三方主题或安装软件；不能据标题判断。</td></tr><tr><td>宝马</td><td>智能个人助理</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/69d31790000000002200ff74?xsec_token=ABpUt7ftxNz0rlshfx25ordCm4Dxmxr0iXL1PkPwVjaCY=&amp;xsec_source=pc_search&amp;source=web_explore_feed">如何设置你好，宝马“个人助理”</a></td><td>设置与唤醒参考；不把用户头像、概念虚拟人与量产数字助手混为一谈。</td></tr><tr><td>特斯拉</td><td>Grok</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6ab3136f000000001500f870?xsec_token=AB3tpfBqi6fY3wOEdsd0i_dxrjyKU3Snd0cE9TPxXFvlI=&amp;xsec_source=pc_search&amp;source=web_explore_feed">Tesla车内的Grok语音助手现在能执行任务了</a></td><td>只作为对话助手邻近线索；需核查国家地区、版本、量产可用性，无照片萌宠证据。</td></tr><tr><td>乐道</td><td>小乐</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6a8889f0000000003302bc4a?xsec_token=ABnI_Wsiyc37kwGguUjdJXSOOQNOG_gws_ghWrLJvdDJo=&amp;xsec_source=pc_search&amp;source=web_explore_feed">小乐的正确打开方式</a></td><td>对话人格与场景交互；尚未证明有照片生成或手机形象管理。</td></tr><tr><td>阿维塔</td><td>情感交互／Vortex方向</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/68c19e5a000000001d03b159?xsec_token=AB6pTL9Y44oskhqeIrqAsqmFBBY-R1JIEafFgYKNm9n80=&amp;xsec_source=pc_search&amp;source=web_explore_feed">阿维塔 ｜ 奢华材质、前沿科技、情感交互</a></td><td>仅为设计方向线索，不认定Vortex等同可交互萌宠。</td></tr><tr><td>奔驰</td><td>MBUX／个性化头像方向</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/67c17f5b000000002900d4c6?xsec_token=AB7PeuB1kO4ReIG_qGZv2zCC0YV8Tpf7NNT7xEKThfx78=&amp;xsec_source=pc_search&amp;source=web_explore_feed">奔驰车机用户名称和个性化头像更改详细教程</a></td><td>当前命中偏用户头像，不是助手角色；不列入直接萌宠对标。</td></tr></tbody></table></div>
+<div class="section-h3" id="s15-7">14.7 对本项目的设计启发</div>
+<ol style="margin:8px 0 8px 20px;font-size:14px;"><li>手机创建链路优先：入口→图片要求→上传/裁剪→生成进度→预览→重试/保存→同步车机→确认生效。只有部分环节本轮已观察，其余为建议研究项。</li><li>静态、动态结果分开：清楚说明各自效果、生成时间、支持车型和显示位置，避免用户以为“会动”就一定能对话。</li><li>从模板定制到真实宠物：预设角色/换装与自家宠物照片生成是两种不同任务；可以共用作品管理，但不宜混淆创建入口。</li><li>车机回传状态：手机生成成功后，应明确在哪个车机页面找到、是否已同步、何时可用；QQ音乐问题样本提示跨端路由需要失败恢复。</li><li>情感体验与基本管理同时设计：预览动效、命名、更换、删除、关闭展示、重新生成等需有清楚路径；这些是设计建议，不是已确认采购范围。</li></ol>
+<div class="section-h3" id="s15-8">14.8 筛选规则与排除内容</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>将证据分为手机操作画面、车机操作/结果、实体助手、正文描述、未读搜索线索。</li><li>不把用户头像定制等同助手形象定制，不把真实宠物留车模式等同虚拟萌宠，不把App自身更新当作本功能。</li><li>排除“鸿蒙最新OTA|可以从壁纸里抓出柯基了”：打开后见实体柯基玩偶和趣味评论，不能证明车机有抓取生成实体宠物的能力。</li><li>小红书AI总结、概念宣传与未经验证的技巧均不直接作功能事实。</li><li>完整链接保留实际搜索得到的xsec_token；平台仍可能要求登录，令牌可能失效。</li></ul>
+<div class="section-h3" id="s15-9">14.9 本轮检索词</div>
+<p>smart 智能助手 狐狸；车机 AI萌宠 上传 照片；车载 智能助手 萌宠；蔚来 NOMI 表情 互动；小鹏 小P 智能助手 形象；极氪 EVA 智能助手 萌宠；大众 ID AI 萌宠 智能助手；比亚迪 智能助手 小迪 形象 萌宠；宝马 智能个人助理 虚拟形象；特斯拉 Grok 智能助手；问界 小艺 萌宠 壁纸；乐道 小乐 豹 形象 智能助手；阿维塔 阿维 智能助手 Vortex；奔驰 MBUX 虚拟助手 头像。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s16"><div class="section-h2"><span class="snum">15</span> OneHit</div>
+<div class="section-h3" id="s16-1">15.1 2026年10月27日补查结果（最新）</div>
+<p>小红书登录与检索已恢复。本轮新增明确手机App证据，以下更新优先于前轮“超时／无原笔记”等历史表述。未操作实车或发布场景。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机App画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>鸿蒙智行／尊界S800星辉尊享版</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/696624b7000000001a0273ee?xsec_token=ABMEzE5i8IgGZ8obixFc4EFUP8J8emUSCWPamuDWWY6Qc=&amp;xsec_source=pc_search&amp;source=web_explore_feed">鸿蒙智行车辆智慧场景</a>；随时回应；页面01-13（未显示年份）</td><td>共4张，本轮看清图2—4。图2爱车页“智慧场景”入口。图3“我的场景”：出发上班、下车提醒标注自动/官方并有开关，尊享会客标注手动/官方。底部“分享码添加”“自定义创建”。图4“推荐场景”：双人SPA、单人SPA、手机遗忘提醒、下班回家、开门调低音量；卡片含名称、描述、作者、使用次数和“添加”。</td><td>直接参考手机入口→我的/推荐列表→添加/创建入口，以及自动/手动与官方标签。<strong>仅核验入口及列表，未展开编辑器、分享码输入与生成、社区分享、添加结果或开关执行结果。</strong> 推荐列表不等于已证明用户投稿场景广场；三类指定预制模式仍未核验。</td></tr></tbody></table></div>
+<p>本轮补齐：明确手机外框与爱车入口、推荐列表、我的列表、创建及分享码添加入口、自动规则开关样式。仍需：条件/动作编辑与保存、场景码生成→社区分享→导入成功、跨端同步、完整启停反馈、宠物/露营/冥想三类预制流程。列表结构可直接用于设计拆解，当前不把完整OneHit闭环标为已完成。</p>
+<div class="section-h3" id="s16-2">15.2 前轮记录（历史内容，以上述最新补查为准）</div>
+<p>【历史记录，非当前缺口结论】更新：2026年10月26日。原计划以小红书手机 App 流程为主；当前小红书浏览器连接超时，未取得新增原笔记，本轮先整理网页证据与候选对象。以下链接均注明来源，不伪造小红书直达链接；未进行实车操作或向社区发布场景。</p>
+<div class="section-h3" id="s16-3">15.3 2026年10月27日小红书补查</div>
+<p>本轮登录后已恢复搜索和原笔记读取，新增以下素材。打开下一条时出现“电脑设备登录超限，请重新登录”，因此补查再次中断；这次不是浏览器超时。前文“未取得新增原笔记”为10月26日历史状态，以下更新优先。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验画面与正文</th><th>参考重点与局限</th></tr></thead><tbody><tr><td>鸿蒙智行／问界M5</td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/6ad7d35a000000002f02985c?xsec_token=AB2h62DC5q18jv8Ns7RBTZ9RXViSLVuBMlTUNL0YVpMxA=&amp;xsec_source=pc_search&amp;source=web_explore_feed">问界智慧场景很实用，欢迎推荐</a>；岁月静好；页面显示6天前</td><td>3张均查看。图2为裁切的智慧场景页面，“我的场景／推荐场景”页签；列表含“提醒手机充电”（自动）、“出发上班”（自动／官方）、“下车提醒”（自动／官方）及开关样式。正文描述挂D档触发充电语音提醒。其余两图为车辆实物。</td><td>可参考场景列表、官方与自定义标签、自动规则开关。图片裁切，未显示完整手机外框，手机端归属需补完整截图；没有创建/编辑、分享码或推荐内页。不能仅凭作者描述验证实际触发效果。</td></tr></tbody></table></div>
+<p><strong>本轮补齐：</strong> 场景列表与启用开关的局部画面。<strong>仍缺：</strong> 完整手机创建编辑、码生成/导入/社区分享、推荐/广场详情、三类预制模式及跨端同步。</p>
+<div class="section-h3" id="s16-4">15.4 任务书范围与结论</div>
+<p>任务书2.1.1备注：“用户可在车端/手机端快速生成场景码并分享至社区；车机端/移动端显示后台推荐中心的场景列表;自定义场景创建；场景查看，场景编辑；场景模式开启/关闭；场景广场获取;预制模式包含：宠物模式、露营模式、冥想模式等”。</p>
+<p>OneHit在本项目是跨端场景管理与分享，不仅是一个快捷按钮。按以下子topic展开：场景码生成、社区分享、推荐列表、自定义创建、查看、编辑、开启/关闭、场景广场获取、宠物/露营/冥想预制模式。</p>
+<p><strong>优先补图对象：鸿蒙智行智慧场景、小鹏智慧场景、极氪场景工坊。</strong> 鸿蒙智行的手机入口、推荐、码导入、社区分享链路在历史功能说明转载中较完整；小鹏有手机推荐与编辑的车主文章；极氪有手机版与AI创建线索。目前均不标五星直接流程对标。</p>
+<div class="section-h3" id="s16-5">15.5 参考对象与原文链接</div>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>原文链接与来源</th><th>已核验信息</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>鸿蒙智行／问界 M9</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.jqman.com/travel/214182.html">2025年5月 OTA 功能说明转载</a>，JQman转载IT之家；<a target="_blank" rel="noopener noreferrer" href="https://apps.apple.com/cn/app/%E9%B8%BF%E8%92%99%E6%99%BA%E8%A1%8C/id6459943727">官方App商店页</a></td><td>历史转载介绍手机爱车页→智慧场景，含我的/推荐、码或二维码添加、场景分享至社区或微信。App商店更新记录另提及跨车型分享。</td><td>最接近任务书的手机场景生态候选。转载是历史文字证据，未逐张视觉核验；历史同车型限制与后续跨车型更新不可混为同版规则。App商店仅佐证跨车型更新，不能独立证明完整链路。</td></tr><tr><td><strong>小鹏</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xchuxing.com/article/87503">小鹏智慧座舱</a>，新出行车主文章／检索摘要</td><td>摘要描述手机App智慧场景入口、推荐场景，一键添加以及在现有方案上修改。</td><td>适合补“发现→添加→二次编辑”。本轮只取得检索摘要，正文及手机图未核验，不能作为完整已验证功能。</td></tr><tr><td><strong>极氪</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://post.smzdm.com/p/a9k28e2p/">场景工坊手机版与AI创建</a>，什么值得买汇编／检索摘要</td><td>摘要描述OTA6.7手机版场景工坊、AI创建及分享码。</td><td>可作为创新候选：自然语言→场景草稿→确认。属于二手汇编，未核验原发布、手机页面、实际跨车型范围或成功执行。</td></tr><tr><td><strong>蔚来 ET7</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://club.m.autohome.com.cn/bbs/thread/4e85ef2e0ccc1b0a/109299609-1.html">玩转快捷场景（附场景码）</a>，车主论坛／检索摘要</td><td>作者谈及车机与App快捷场景、预设场景、分享及NOMI生成。</td><td>用于扩展“AI辅助创建”的候选。没有核验手机创建、分享与执行页面；不将车机能力全部归入手机App。</td></tr></tbody></table></div>
+<p>【历史记录，非当前缺口结论】表内没有新增小红书原笔记，候选标题不能替代手机画面。后续小红书关键词：鸿蒙智行/AITO 智慧场景 分享码 手机；小鹏 智慧场景 App 创建 分享；极氪 手机版 场景工坊 AI；蔚来 快捷场景 App。</p>
+<div class="section-h3" id="s16-6">15.6 子topic覆盖与补图清单</div>
+<div class="table-wrap"><table><thead><tr><th>子topic</th><th>已有线索</th><th>仍需直接证据</th></tr></thead><tbody><tr><td>车端/手机生成场景码</td><td>鸿蒙智行手机分享说明；其他品牌分享码线索</td><td>手机生成页、车机生成页及码有效规则。</td></tr><tr><td>分享至社区</td><td>鸿蒙智行历史说明</td><td>分享预览、社区发布入口与返回状态；本轮未发帖。</td></tr><tr><td>推荐中心列表</td><td>鸿蒙智行我的/推荐；小鹏推荐摘要</td><td>列表、推荐理由、车型适配、添加反馈；后台架构无法从UI推断。</td></tr><tr><td>自定义创建</td><td>鸿蒙智行、极氪文字线索</td><td>条件→动作→命名→保存的手机完整流程。</td></tr><tr><td>查看与编辑</td><td>小鹏摘要；鸿蒙智行场景管理线索</td><td>详情、编辑、保存及两端同步。</td></tr><tr><td>模式开启/关闭</td><td>暂无完整手机证据</td><td>开启、运行、停止、执行失败；自动规则启用与手动执行需区分。</td></tr><tr><td>场景广场获取</td><td>推荐列表是相邻线索</td><td>推荐不等于用户投稿广场；需核验浏览、搜索、导入与适配检查。</td></tr><tr><td>宠物模式</td><td>暂无本轮完整手机证据</td><td>预制详情、开启条件、运行状态、退出。</td></tr><tr><td>露营模式</td><td>暂无本轮完整手机证据</td><td>同上，并核对能耗与退出规则。</td></tr><tr><td>冥想模式</td><td>暂无本轮完整手机证据</td><td>同上，核对声音、座椅等联动。</td></tr></tbody></table></div>
+<div class="section-h3" id="s16-7">15.7 本项目建议</div>
+<p>列表可分“我的场景、推荐、场景广场”，详情统一展示触发条件、执行动作、适用车型和版本。导入前展示不支持的动作及替代方案，确认后再保存；不要让分享码直接掩盖实际执行内容。</p>
+<p>自定义创建可从模板开始，也可将自然语言转成可编辑草稿；保存、同步到车端、规则启用、实际运行分别反馈。分享的应是场景配置，不能携带个人位置、账号信息。宠物、露营、冥想宜作为预制模板单独核验，不能因品牌有场景工坊就认定三者均支持。</p>
+<p>【历史记录，非当前缺口结论】以上为设计建议，不是已经核验的竞品流程。本轮完成范围拆解与候选整理，小红书手机流程待补证。</p>
+<div class="section-h3" id="s16-8">15.8 2026年10月26日重新连接记录</div>
+<p>Chrome与内置浏览器重连均超时；备用网页读取仅到登录页，本轮未新增小红书素材。现有待补证结论不变，详见<a href="#s18">待补证清单</a>。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s17"><div class="section-h2"><span class="snum">16</span> SOTA订阅</div>
+<div class="section-h3" id="s17-1">16.1 2026年10月27日补查结果（最新）</div>
+<p>小红书已恢复。新增历史车主手机订阅与激活素材，以下更新优先于前轮“无新增小红书原笔记”。本轮只阅读笔记，没有购买、激活或取消任何服务。</p>
+<div class="table-wrap"><table><thead><tr><th>品牌</th><th>直接打开原笔记</th><th>已核验的手机App画面</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>蔚来一代ES6／NIO Pilot全配包</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.xiaohongshu.com/explore/658de381000000000f0119ab?xsec_token=ABQY0gvrOPxuCiXIlVLM_SIiE7i0UHlBeuST5oe3KdubA=&amp;xsec_source=pc_search&amp;source=web_explore_feed">NOP差点被我买断了</a>；NOMOOO；编辑于2023-12-29</td><td>5图全部核验。图1支付成功：订阅成功→完成激活任务→NP全配包激活，预计5—10分钟，“去完成激活任务”。图2等待激活，提示期间勿开车门、离开页面仍继续。图3智能驾驶权益页：NIO Pilot自动辅助驾驶系统全配包、有效期至2024/2/29、订阅管理/使用指南。图4激活成功与“前往智能驾驶”。图5订单详情：商品、关联车辆、已完成状态、金额与发票入口。</td><td><strong>重点参考付费成功与车辆激活分开、等待期说明、激活结果及有效期管理。</strong> 配图顺序不是操作时间顺序，应按支付→任务→等待→成功→权益理解。历史一代NIO Pilot不是NOP+，不能证明整体城市/高速NOA包；￥380、买1月送1月为当时截图，不作为当前报价。无付款前商品选择、结算页、续费/取消内页及激活失败。</td></tr></tbody></table></div>
+<p>本轮补齐：实际手机支付结果、激活等待、激活成功、权益有效期、订单详情、订阅管理入口。仍需：整体NOA商品定义与资格、付款前商品/订单确认、续费、取消、到期、失败恢复。任务书仅要求整体NOA包售卖，不由“订阅”一词推定自动续费；商业规则仍以项目确认为准。</p>
+<div class="section-h3" id="s17-2">16.2 前轮记录（历史内容，以上述最新补查为准）</div>
+<p>【历史记录，非当前缺口结论】更新：2026年10月26日。当前小红书浏览器连接超时，未取得新增原笔记；本轮以官方订阅说明为核心，补充国内候选线索。链接在表格中按来源注明，未购买、订阅、取消或操作任何账户权益。价格、开放地区与车型适配容易变化，本报告不将历史价格作为现行报价。</p>
+<div class="section-h3" id="s17-3">16.3 任务书范围与结论</div>
+<p>任务书2.1.1备注：“售卖智驾包商品，整体打包NOA，不区分城市NOA和高速NOA”。本行只有第一车型列勾选，后续几列为空，实施时需按原表车型列确认适用范围。</p>
+<p>本项目的SOTA订阅重点是智驾包商品与权益链路，不是FOTA软件下载/安装，也不是车机影音流量订阅。<strong>优先参考特斯拉官方明确的手机购买与取消路径；国内优先补蔚来NOP+、乐道NOA及鸿蒙智行ADS包的手机商品页面。</strong> 后三者在本轮仍不足以作为已核验手机直接流程。</p>
+<div class="section-h3" id="s17-4">16.4 参考对象与原文链接</div>
+<div class="table-wrap"><table><thead><tr><th>品牌与来源</th><th>原文链接</th><th>已核验内容</th><th>参考重点与局限</th></tr></thead><tbody><tr><td><strong>特斯拉／官方英文订阅支持页，适用市场</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.tesla.com/support/full-self-driving-subscriptions">FSD (Supervised) Subscriptions</a></td><td>官方列明手机路径：Upgrades→Software Upgrades→选择FSD→Subscribe；仅车主账户可订阅。取消在Upgrades→Manage→FSD→Cancel Subscription；取消后可用至本计费期末，月费不按比例返还。另有资格与前置升级说明。</td><td>适合参考资格判断、商品选择、权益管理、取消与到期说明。<strong>是官方文字步骤，未取得实际手机页面；海外适用市场不能直接当中国流程。</strong> 不把FSD套件等同本项目NOA功能范围。</td></tr><tr><td><strong>特斯拉中国／官方软件升级说明</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.tesla.cn/support/upgrades">软件升级包</a></td><td>官方说明车主可在App购买适配车辆的软件功能包，显示内容随配置变化；付费功能包与免费的常规OTA更新分开。</td><td>参考“适配商品列表→购买→车辆安装”的职责分工。属于付费升级包说明，不能据此断言中国市场已有同样按月订阅、取消及退款规则。</td></tr><tr><td><strong>蔚来／NOP+，历史企业披露</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://www.sec.gov/Archives/edgar/data/1736541/000110465924063824/tm2414718-1_f3asr.htm">2024年企业证券申报文件</a></td><td>企业文件检索内容明确NOP+可由用户订阅。</td><td>可确认是值得继续补图的订阅型对象，不能证明当前价格、手机购买路径、续费与取消细节；本轮仅核验检索摘要。</td></tr><tr><td><strong>乐道 L60／国内扩展候选</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://m.xchuxing.com/ins/758501">智驾到期之后高速领航</a>，新出行车主动态／检索摘要</td><td>历史车主摘要提及乐道App参数配置中，NOA订阅包含高速城快及全场景领航。</td><td>与整体打包方向相关，但参数配置页不是实际订阅订单流程；价格和权益不按现行规则引用，商品、结算、权益生效均待核验。</td></tr><tr><td><strong>华为ADS生态／岚图所链接用户指南</strong></td><td><a target="_blank" rel="noopener noreferrer" href="https://m.voyah.com.cn/userguide/h37b/SF-05007001_f8200.html">NCA功能介绍</a></td><td>检索摘要提到在<strong>中控屏ADS App</strong>的辅助驾驶→服务订阅查看ADS包及NCA功能。</td><td>仅为车机订阅管理线索，<strong>不是手机App</strong>；页面直接打开失败，不列为手机直接参考，也不证明城市/高速合并售卖。</td></tr></tbody></table></div>
+<p>本轮没有新增小红书直达笔记，不用站外链接伪装原笔记。后续小红书优先检索：蔚来 NOP+ App 订阅 取消；乐道 NOA App 到期 续费；鸿蒙智行 ADS 服务订阅 手机；特斯拉 FSD App 订阅（区分地区）。</p>
+<div class="section-h3" id="s17-5">16.5 子topic覆盖与补图清单</div>
+<div class="table-wrap"><table><thead><tr><th>子topic</th><th>可参考的内容</th><th>仍需核验</th></tr></thead><tbody><tr><td>整体NOA商品</td><td>任务书明确一个整体包；乐道有相近历史线索</td><td>手机商品名、包含能力、车型范围；不设计成城市/高速两个必选商品。</td></tr><tr><td>资格与适配</td><td>特斯拉官方说明车辆配置及前置升级</td><td>不适配、已有权益、车主/授权账号限制的实际手机页面。</td></tr><tr><td>商品详情与价格周期</td><td>特斯拉官方存在订阅商品</td><td>本项目售卖周期、有效期、价格、试用及续费政策，不能照搬竞品。</td></tr><tr><td>订阅购买</td><td>特斯拉官方手机文字路径</td><td>商品详情→确认订单→支付→结果的真实界面；未实际付款。</td></tr><tr><td>生效与车端同步</td><td>特斯拉说明功能可用前可能需软件更新</td><td>已支付待生效、待更新、可用、失败及恢复。</td></tr><tr><td>管理、取消、到期</td><td>特斯拉官方文字规则</td><td>手机管理页、取消确认页、到期提示；取消续费与立刻停用需区分。</td></tr><tr><td>续费与自动续费</td><td>当前证据不足</td><td>是否提供、是否默认、扣款时间、关闭入口及状态反馈。</td></tr><tr><td>买断/试用/退款</td><td>不同市场规则不统一</td><td>只按本项目实际商业规则展示；不由“订阅”名称推定自动续费。</td></tr></tbody></table></div>
+<div class="section-h3" id="s17-6">16.6 本项目建议</div>
+<p>商品页以一个NOA包呈现，内部说明包含哪些道路场景与功能边界，而不是按城市/高速拆两份购买。付款前明确适用车辆、有效期起算、生效条件和续费规则；支付成功与车辆功能已可用应作为不同状态。</p>
+<p>权益页至少说明当前有效期、车辆与账号、权益状态及可进行的下一步。若允许取消，应说明取消的是后续续费还是当前服务，以及何时停止使用。续费、退款、转移车辆等均待项目商业规则确定，以上是设计建议，不是现成竞品承诺。</p>
+<p>本轮完成任务书拆解及官方手机路径核验，小红书实际商品与订阅流程待补证，暂不标五星完整对标。</p>
+<div class="section-h3" id="s17-7">16.7 2026年10月26日重新连接记录</div>
+<p>Chrome与内置浏览器重连均超时；备用网页读取仅到登录页，本轮未新增小红书素材。现有待补证结论不变，详见<a href="#s18">待补证清单</a>。</p>
+<div class="divider"></div>
+</section>
+<section class="section" id="s18"><div class="section-h2">附录 待补证清单</div>
+<p>更新：2026年10月27日。登录后搜索和原笔记读取已恢复；本轮新增5条有效原笔记，覆盖5个主题。下列是剩余缺口，并非这些主题完全没有素材。所有原笔记直达链接位于对应报告表格。</p>
+<div class="table-wrap"><table><thead><tr><th>主题</th><th>本轮已补齐</th><th>仍缺失的子topic</th></tr></thead><tbody><tr><td><a href="#s11">维修模式</a></td><td>本轮无新增有效样例；既有3条状态页保留</td><td>蒙层覆盖范围、可用/受限按键与反馈、进入/退出及恢复状态。</td></tr><tr><td><a href="#s12">行程统计</a></td><td>第三方「有车」App周/月/年/全部控件、摘要及里程趋势宣传图</td><td>车企官方App年/月/日完整视图与切换；日汇总、同日多行程、下钻；图表交互和空态。</td></tr><tr><td><a href="#s13">智驾报告</a></td><td>小鹏手机月报、月指标、上月对比、逐日趋势与热力日历</td><td>年视图、独立日汇总、日期选择与行程下钻；空态/失败；任务书新增四项数据的业务定义。</td></tr><tr><td><a href="#s14">远程车辆状态报告（含提醒）</a></td><td>小米系统推送、短信、App车辆安全消息列表</td><td>提醒设置、推送点击落点、部件详情、处理→恢复、故障类提醒、实时刷新与失败。</td></tr><tr><td><a href="#s16">OneHit</a></td><td>尊界手机爱车入口、我的/推荐列表、自动/手动/官方标签、开关、码添加及自定义创建入口</td><td>创建编辑保存、码生成与社区分享/导入成功；跨端同步；用户广场；宠物/露营/冥想完整流程。</td></tr><tr><td><a href="#s17">SOTA订阅</a></td><td>蔚来历史手机支付结果、激活等待/成功、权益有效期、订单详情、管理入口</td><td>整体NOA商品/资格、付款前商品及订单确认、续费/取消/到期、激活失败恢复。历史一代NIO Pilot不等于NOP+或整体城市NOA。</td></tr></tbody></table></div>
+<div class="section-h3" id="s18-1">本轮取证范围</div>
+<ul style="margin:8px 0 8px 20px;font-size:14px;"><li>尊界智慧场景：看清图2—4，未展开真实App控件。</li><li>蔚来订阅：5张全部核验，2023年历史素材。</li><li>小米提醒：3张全部核验，未点击真实通知。</li><li>第三方「有车」：看图1—3，共4图，宣传合成图单独标注。</li><li>小鹏月报：看图1—3，共4图；报告期为2026年05月。</li><li>维修模式：检索并核验一条理想预约维保素材，不符维修模式范围，排除。</li></ul>
+<p>此前的浏览器超时与短暂设备登录超限均为历史阻塞，本轮不再以它们作为未补齐的原因。没有进行车辆控制、付款、实际启停场景、发帖或对外分享。</p>
+<p><a href="#s1">返回竞品调研索引</a></p>
+<div class="section-h3" id="s18-2">编制信息</div>
+<p>来源：项目output文件夹内16份专题报告与2026年10月27日待补证清单。保留最新补查与历史依据，不将候选材料提升为事实。</p>
+<p>© 2026 topx.design</p>
+</section>
+</div>
+
+<footer>
+  上汽大众 CEA 互联功能竞品调研报告 &nbsp;·&nbsp; 2026-10-29 &nbsp;·&nbsp; <span>topx.design</span>
+</footer>
+
+<span class="reading-mark" aria-hidden="true">CEA竞品调研</span><a class="backtop" href="#index">返回目录 ↑</a><script>
+const sections=document.querySelectorAll('section[id]');const observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){document.querySelectorAll('.nav-inner a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));}}},{rootMargin:'-10% 0px -75% 0px'});sections.forEach(s=>observer.observe(s));
+</script></body>
+</html>
